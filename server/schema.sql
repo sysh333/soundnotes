@@ -26,5 +26,8 @@ CREATE TABLE `notes` (
 
 
 INSERT INTO `sound` (`id`,`title`, `start_time`,`end_time`,`data_URL`) VALUES (1,'title-1', '2016-01-01 00:01:00' ,'2016-01-01 00:01:00','testurl');
+INSERT INTO `sound` (`id`,`title`, `start_time`,`end_time`,`data_URL`) VALUES (1,'title-1', '2016-01-01 00:01:00' ,'2016-01-01 00:01:00','testurl');
+INSERT INTO `sound` (`id`,`title`, `start_time`,`end_time`,`data_URL`) VALUES (1,'title-1', '2016-01-01 00:01:00' ,'2016-01-01 00:01:00','testurl');
+INSERT INTO `sound` (`id`,`title`, `start_time`,`end_time`,`data_URL`) VALUES (1,'title-1', '2016-01-01 00:01:00' ,'2016-01-01 00:01:00','testurl');
 
 INSERT INTO `sound` (`name`, `price`) VALUES ('Item 1', 100);
