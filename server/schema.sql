@@ -12,7 +12,7 @@ CREATE TABLE `sound` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
-CREATE TABLE `notes` (
+CREATE TABLE `note` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `text` TEXT,
   `submit_time` DATETIME,
@@ -31,14 +31,14 @@ INSERT INTO `sound` (`title`, `start_time`,`end_time`,`data_URL`) VALUES ('title
 INSERT INTO `sound` (`title`, `start_time`,`end_time`,`data_URL`) VALUES ('title-5', '2016-01-05 00:01:00' ,'2016-01-05 00:01:50','testurl');
 
 
-INSERT INTO `notes` (`text`, `submit_time`,`sound_id`) VALUES ('今日はいい天気','2016-01-01 00:01:00',1);
-INSERT INTO `notes` (`text`, `submit_time`,`sound_id`) VALUES ('今日はああ天気','2016-01-01 00:01:02',1);
-INSERT INTO `notes` (`text`, `submit_time`,`sound_id`) VALUES ('今日はうう天気','2016-01-01 00:01:03',1);
+INSERT INTO `note` (`text`, `submit_time`,`sound_id`) VALUES ('今日はいい天気','2016-01-01 00:01:00',1);
+INSERT INTO `note` (`text`, `submit_time`,`sound_id`) VALUES ('今日はああ天気','2016-01-01 00:01:02',1);
+INSERT INTO `note` (`text`, `submit_time`,`sound_id`) VALUES ('今日はうう天気','2016-01-01 00:01:03',1);
 
-INSERT INTO `notes` (`text`, `submit_time`,`sound_id`) VALUES ('明日はいい天気','2016-01-01 00:01:00',2);
-INSERT INTO `notes` (`text`, `submit_time`,`sound_id`) VALUES ('明日はああ天気','2016-01-01 00:01:02',2);
-INSERT INTO `notes` (`text`, `submit_time`,`sound_id`) VALUES ('明日はうう天気','2016-01-01 00:01:03',2);
+INSERT INTO `note` (`text`, `submit_time`,`sound_id`) VALUES ('明日はいい天気','2016-01-01 00:01:00',2);
+INSERT INTO `note` (`text`, `submit_time`,`sound_id`) VALUES ('明日はああ天気','2016-01-01 00:01:02',2);
+INSERT INTO `note` (`text`, `submit_time`,`sound_id`) VALUES ('明日はうう天気','2016-01-01 00:01:03',2);
 
-INSERT INTO `notes` (`text`, `submit_time`,`sound_id`) VALUES ('昨日はいい天気','2016-01-01 00:01:00',3);
-INSERT INTO `notes` (`text`, `submit_time`,`sound_id`) VALUES ('昨日はああ天気','2016-01-01 00:01:02',3);
-INSERT INTO `notes` (`text`, `submit_time`,`sound_id`) VALUES ('昨日はうう天気','2016-01-01 00:01:03',3);
+INSERT INTO `note` (`text`, `submit_time`,`sound_id`) VALUES ('昨日はいい天気','2016-01-01 00:01:00',3);
+INSERT INTO `note` (`text`, `submit_time`,`sound_id`) VALUES ('昨日はああ天気','2016-01-01 00:01:02',3);
+INSERT INTO `note` (`text`, `submit_time`,`sound_id`) VALUES ('昨日はうう天気','2016-01-01 00:01:03',3);
