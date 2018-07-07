@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.get('/', async (req, res, next) => {
   let connection;
-  const sound_id = 1;
+  const sound_id = 2;
   try {
     connection = await db.getConnection();
     const [rows] = await connection.query('select id, text, submit_time from `note` WHERE `sound_id` = ? ORDER BY submit_time',[sound_id]);

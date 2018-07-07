@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import apiService from "../api-service";
+//import apiService from "../api-service";
 
 export default {
   name: 'Homepage',
