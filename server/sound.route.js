@@ -7,7 +7,7 @@ router.get('/', async (req, res, next) => {
   let connection;
   try {
     connection = await db.getConnection();
-    const [rows] = await connection.query('select id, text, submit_time from note WHERE sound_id=1 ORDER BY submit_time');
+    const [rows] = await connection.query('select id, title, start_time, end_time, data_URL from sound');
     res.json(rows);
   } catch (err) {
      console.log('*** catch ***',err); //クエリをエラーにしてコメントを外すと出力される

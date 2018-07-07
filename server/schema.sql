@@ -22,23 +22,3 @@ CREATE TABLE `note` (
       REFERENCES sound(id)
       ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-
-INSERT INTO `sound` (`title`, `start_time`,`end_time`,`data_URL`) VALUES ('title-1', '2016-01-01 00:01:00' ,'2016-01-01 00:01:50','testurl');
-INSERT INTO `sound` (`title`, `start_time`,`end_time`,`data_URL`) VALUES ('title-2', '2016-01-02 00:01:00' ,'2016-01-02 00:01:50','testurl');
-INSERT INTO `sound` (`title`, `start_time`,`end_time`,`data_URL`) VALUES ('title-3', '2016-01-03 00:01:00' ,'2016-01-03 00:01:50','testurl');
-INSERT INTO `sound` (`title`, `start_time`,`end_time`,`data_URL`) VALUES ('title-4', '2016-01-04 00:01:00' ,'2016-01-04 00:01:50','testurl');
-INSERT INTO `sound` (`title`, `start_time`,`end_time`,`data_URL`) VALUES ('title-5', '2016-01-05 00:01:00' ,'2016-01-05 00:01:50','testurl');
-
-
-INSERT INTO `note` (`text`, `submit_time`,`sound_id`) VALUES ('今日はいい天気','2016-01-01 00:01:00',1);
-INSERT INTO `note` (`text`, `submit_time`,`sound_id`) VALUES ('今日はああ天気','2016-01-01 00:01:02',1);
-INSERT INTO `note` (`text`, `submit_time`,`sound_id`) VALUES ('今日はうう天気','2016-01-01 00:01:03',1);
-
-INSERT INTO `note` (`text`, `submit_time`,`sound_id`) VALUES ('明日はいい天気','2016-01-01 00:01:00',2);
-INSERT INTO `note` (`text`, `submit_time`,`sound_id`) VALUES ('明日はああ天気','2016-01-01 00:01:02',2);
-INSERT INTO `note` (`text`, `submit_time`,`sound_id`) VALUES ('明日はうう天気','2016-01-01 00:01:03',2);
-
-INSERT INTO `note` (`text`, `submit_time`,`sound_id`) VALUES ('昨日はいい天気','2016-01-01 00:01:00',3);
-INSERT INTO `note` (`text`, `submit_time`,`sound_id`) VALUES ('昨日はああ天気','2016-01-01 00:01:02',3);
-INSERT INTO `note` (`text`, `submit_time`,`sound_id`) VALUES ('昨日はうう天気','2016-01-01 00:01:03',3);
