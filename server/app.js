@@ -1,13 +1,16 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const config = require('./config');
+const noteRoute = require('./note.route');
+const soundRoute = require('./sound.route');
 
 const app = express();
 
 app.use(bodyParser.json());
 
 // TODO add routes ----
-
+app.use('/api/note', noteRoute);
+app.use('/api/sound', soundRoute);
 
 
 // --------------------
