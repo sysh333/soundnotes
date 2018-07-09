@@ -1,13 +1,13 @@
 export default {
-  /*
+  
   getItems: () => {
     const options = {
       method: 'GET',
     };
-    return fetch('/api/items', options)
+    return fetch('/api/note', options)
       .then(response => response.json());
   },
-  */
+  
   createItem: ({ text, time, sound_id }) => {
     const options = {
       method: 'POST',

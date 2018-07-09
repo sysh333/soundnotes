@@ -1,5 +1,16 @@
 <template>
+
   <div class="homepage">
+     <div class="items-list">
+        <h2>Note</h2>
+        <ul>
+          <li v-for="item of items" v-bind:key="item.id">
+            <div class="single-item">
+              <span class="item-label">{{ item.text }}</span>
+            </div>
+          </li>
+        </ul>
+    </div>
     <h1>Add Item</h1>
     <p>See the <router-link to="/">Store</router-link></p>
     <form v-on:submit="addText">
@@ -19,9 +30,16 @@ export default {
       text: '',
       time: '',
       sound_id: 2,
+      items: [],
     };
   },
   methods: {
+    getItems: function() {
+      apiService.getItems()
+        .then(items => {
+          this.items = items;
+        });
+    },
     addText: function(evt) {
       evt.preventDefault();
       console.log(this.text , new Date(), this.sound_id);
@@ -43,6 +61,9 @@ export default {
   //   const title = window.document.getElementsByTagName('title')[0];
   //   title.textContent = 'mystore: admin';
   // },
+  },
+  mounted: function() {
+    this.getItems();
   },
 };
 </script>
