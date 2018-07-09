@@ -30,7 +30,7 @@ router.post('/', async (req, res, next) => {
     const queryInsert = 'INSERT INTO note (text, submit_time , sound_id) VALUES (?, ?, ?)';
     const [result] = await connection.query(queryInsert, [text, time, sound_id]);
 
-    res.json(result.insertId);
+    res.json({ text, time, sound_id, id: result.insertId});
   } catch (err) {
     next(err);
     console.log('*** catch ***',err); //クエリをエラーにしてコメントを外すと出力される

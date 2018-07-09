@@ -4,7 +4,7 @@ export default {
     const options = {
       method: 'GET',
     };
-    return fetch('/api/note', options)
+    return fetch('/api/note?sound_id=2', options)
       .then(response => response.json());
   },
   
