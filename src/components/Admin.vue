@@ -10,27 +10,40 @@
 </template>
 
 <script>
-//import apiService from '../api-service';
+import apiService from '../api-service';
 
 export default {
   name: 'Admin',
   data() {
     return {
       text: '',
+      time: '',
+      sound_id: 2,
     };
   },
   methods: {
     addText: function(evt) {
       evt.preventDefault();
-      console.log(this.text);
+      console.log(this.text , new Date(), this.sound_id);
+      apiService.createItem({
+        text: this.text,
+        time: new Date(),
+        sound_id: this.sound_id,
+      })
+        .then(() => {
+        })
+        .catch(e => {
+          console.log('error saving account. e = ', e);
+          this.setMessage('There was an error adding your item');
+        });
+    },
       // TODO: Save data in server using API
-    }
-  },
   // SPAのSEO対策?
   // mounted: function () {
   //   const title = window.document.getElementsByTagName('title')[0];
   //   title.textContent = 'mystore: admin';
   // },
+  },
 };
 </script>
 

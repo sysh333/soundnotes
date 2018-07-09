@@ -20,4 +20,26 @@ router.get('/', async (req, res, next) => {
   }
 });
 
+router.post('/', async (req, res, next) => {
+  let connection;
+  const { text, time, sound_id } = req.body;
+
+  try {
+    connection = await db.getConnection();
+
+    const queryInsert = 'INSERT INTO note (text, submit_time , sound_id) VALUES (?, ?, ?)';
+    const [result] = await connection.query(queryInsert, [text, time, sound_id]);
+
+    res.json(result.insertId);
+  } catch (err) {
+    next(err);
+    console.log('*** catch ***',err); //クエリをエラーにしてコメントを外すと出力される
+  } finally {
+    if (connection) {
+      connection.close();
+    }
+  }
+});
+
+
 module.exports = router;
