@@ -29,13 +29,13 @@ export default {
     return {
       text: '',
       time: '',
-      sound_id: 2,
+      sound_id: 1,
       items: [],
     };
   },
   methods: {
     getItems: function() {
-      apiService.getItems()
+      apiService.getItems(this.sound_id)
         .then(items => {
           this.items = items;
         });
@@ -45,16 +45,20 @@ export default {
       console.log(this.text , new Date(), this.sound_id);
       apiService.createItem({
         text: this.text,
-        time: new Date(),
-        sound_id: this.sound_id,
-      })
+        time: new Date()},
+        this.sound_id
+      )
         .then(newitem => {
           this.items.push(newitem);
+          this.ResetMessage();
         })
         .catch(e => {
           console.log('error saving account. e = ', e);
           this.setMessage('There was an error adding your item');
         });
+    },
+    ResetMessage: function(message) {
+      this.text = '';
     },
       // TODO: Save data in server using API
   // SPAのSEO対策?

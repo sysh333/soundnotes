@@ -1,14 +1,14 @@
 export default {
   
-  getItems: () => {
+  getItems: (sound_id) => {
     const options = {
       method: 'GET',
     };
-    return fetch('/api/note?sound_id=2', options)
+    return fetch(`/api/note?sound_id=${sound_id}`, options)
       .then(response => response.json());
   },
   
-  createItem: ({ text, time}) => {
+  createItem: ({ text, time},sound_id) => {
     const options = {
       method: 'POST',
       body: JSON.stringify({ text, time }),
@@ -16,7 +16,8 @@ export default {
         'content-type': 'application/json',
       },
     };
-    return fetch('/api/note?sound_id=2', options)
+    //return fetch('/api/note?sound_id=2', options)
+    return fetch(`/api/note?sound_id=${sound_id}`, options)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Error in POST /api/note");
