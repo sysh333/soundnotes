@@ -8,15 +8,15 @@ export default {
       .then(response => response.json());
   },
   
-  createItem: ({ text, time, sound_id }) => {
+  createItem: ({ text, time}) => {
     const options = {
       method: 'POST',
-      body: JSON.stringify({ text, time, sound_id }),
+      body: JSON.stringify({ text, time }),
       headers: {
         'content-type': 'application/json',
       },
     };
-    return fetch('/api/note', options)
+    return fetch('/api/note?sound_id=2', options)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Error in POST /api/note");

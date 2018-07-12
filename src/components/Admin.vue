@@ -48,7 +48,8 @@ export default {
         time: new Date(),
         sound_id: this.sound_id,
       })
-        .then(() => {
+        .then(newitem => {
+          this.items.push(newitem);
         })
         .catch(e => {
           console.log('error saving account. e = ', e);
