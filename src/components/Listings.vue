@@ -7,6 +7,10 @@
       <span v-show="!isRecording">Start recording</span>
       <span v-show="isRecording">Stop recording</span>
     </button>
+    <button class="button green-button" v-if="dataUrl.length > 0" v-on:click.stop.prevent="togglePlay">
+      <i class="play icon"></i> Play recording
+    </button>
+    <audio id="audio" v-bind:src='dataUrl' preload="auto"></audio>
   </div>
 </template>
 
@@ -56,6 +60,16 @@ export default {
               console.log(that.recordingData, that.dataUrl);
             };
         }
+    },
+    togglePlay: function() {
+      var audioElement = document.getElementById("audio");
+      if (audioElement.paused === false) {
+          audioElement.pause();
+          console.log('Media play pause');
+      } else {
+          audioElement.play();
+          console.log('Media play ');
+      }
     },
   },
 };
