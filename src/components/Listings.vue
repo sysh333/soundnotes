@@ -10,12 +10,15 @@
     <button class="button green-button" v-if="dataUrl.length > 0" v-on:click.stop.prevent="togglePlay">
       <i class="play icon"></i> Play recording
     </button>
+    <button class="button green-button" v-if="dataUrl.length > 0" v-on:click.stop.prevent="submitRecording">
+      <i class="send icon"></i> Send recording
+    </button>
     <audio id="audio" v-bind:src='dataUrl' preload="auto"></audio>
   </div>
 </template>
 
 <script>
-//import apiService from "../api-service";
+import apiService from "../api-service";
 
 export default {
   name: 'Homepage',
@@ -24,7 +27,9 @@ export default {
       isRecording: false,
       audioRecorder: null,
       recordingData: [],
-      dataUrl: ''
+      dataUrl: '',
+      sound_id: 1,
+      tilte: "test-title"
     };
   },
   methods: {
@@ -61,6 +66,25 @@ export default {
             };
         }
     },
+
+    submitRecording: function(evt) {
+      console.log(that.recordingData , new Date(), this.sound_id);
+      apiService.createSound({
+        tilte: this.tilte,
+        recordingData : that.recordingData,
+        startTime: new Date(),
+        endTime: new Data()},
+        this.sound_id
+      )
+        .then(newitem => {
+          this.items.push(newitem);
+        })
+        .catch(e => {
+          console.log('error saving account. e = ', e);
+          this.setMessage('There was an error adding your item');
+        });
+    },
+
     togglePlay: function() {
       var audioElement = document.getElementById("audio");
       if (audioElement.paused === false) {

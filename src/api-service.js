@@ -16,11 +16,26 @@ export default {
         'content-type': 'application/json',
       },
     };
-    //return fetch('/api/note?sound_id=2', options)
     return fetch(`/api/note?sound_id=${sound_id}`, options)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Error in POST /api/note");
+        }
+        return response.json();
+      });
+  },
+  createSound: ({ title, recordingData, startTime, endTime},sound_id) => {
+    const options = {
+      method: 'POST',
+      body: JSON.stringify({ title, startTime, endTime }),
+      headers: {
+        'content-type': 'application/json',
+      },
+    };
+    return fetch(`/api/sound?sound_id=${sound_id}`, options)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Error in POST /api/sound");
         }
         return response.json();
       });
