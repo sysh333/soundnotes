@@ -1,7 +1,7 @@
 const express = require('express');
 const db = require('./connection');
-let multer = require('multer');
-let upload = multer();
+var multer  = require('multer')
+var upload = multer({ dest: 'uploads/' })
 
 const router = express.Router();
 
@@ -21,10 +21,9 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-router.post('/' , async (req, res, next) => {  //upload.fields([])
+router.post('/', upload.single('avatar'), async (req, res, next) => { 
   let connection;
   const sound_id = req.query.sound_id;
-  //const { text, time } = req.body;
 
   try {
     connection = await db.getConnection();

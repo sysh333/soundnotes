@@ -22,6 +22,7 @@ router.get('/', async (req, res, next) => {
 
 router.post('/', async (req, res, next) => {
   let connection;
+  console.log(req);
   const sound_id = req.query.sound_id;
   const { text, time } = req.body;
 
