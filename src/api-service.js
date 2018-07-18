@@ -25,11 +25,16 @@ export default {
       });
   },
   createSound: ({ title, recordingData, startTime, endTime},sound_id) => {
+    var formData = new FormData();
+    formData.append("title", title);
+    formData.append("startTime", startTime);
+    formData.append("endTime", endTime);
+    formData.append('recording', recordingData);
     const options = {
       method: 'POST',
-      body: JSON.stringify({ title, startTime, endTime }),
+      body: formData,
       headers: {
-        'content-type': 'application/json',
+        'content-type': 'undefined',
       },
     };
     return fetch(`/api/sound?sound_id=${sound_id}`, options)

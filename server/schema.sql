@@ -7,7 +7,7 @@ CREATE TABLE `sound` (
   `title` TEXT,
   `start_time` DATETIME,
   `end_time` DATETIME,
-  `data_URL` TEXT,
+  `recordingData` LONGBLOB,
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

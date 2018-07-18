@@ -68,20 +68,20 @@ export default {
     },
 
     submitRecording: function(evt) {
-      console.log(that.recordingData , new Date(), this.sound_id);
+      console.log(this.recordingData , new Date(), this.sound_id);
       apiService.createSound({
         tilte: this.tilte,
-        recordingData : that.recordingData,
+        recordingData : this.recordingData,
         startTime: new Date(),
-        endTime: new Data()},
+        endTime: new Date()},
         this.sound_id
       )
         .then(newitem => {
-          this.items.push(newitem);
+          //this.items.push(newitem);
         })
         .catch(e => {
           console.log('error saving account. e = ', e);
-          this.setMessage('There was an error adding your item');
+          //this.setMessage('There was an error adding your item');
         });
     },
 
