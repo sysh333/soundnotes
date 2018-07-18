@@ -33,9 +33,9 @@ export default {
     const options = {
       method: 'POST',
       body: formData,
-      headers: {
-        'content-type': 'undefined',
-      },
+      //headers: {
+      //  'content-type': 'undefined',
+      //},
     };
     return fetch(`/api/sound?sound_id=${sound_id}`, options)
       .then((response) => {

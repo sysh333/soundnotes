@@ -21,15 +21,16 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-router.post('/', upload.fields([]),async (req, res, next) => {
+router.post('/' , async (req, res, next) => {  //upload.fields([])
   let connection;
-  //const sound_id = req.query.sound_id;
+  const sound_id = req.query.sound_id;
   //const { text, time } = req.body;
 
   try {
     connection = await db.getConnection();
     let formData = req.body;
-    console.log('here');
+    console.log(req);
+    console.log(sound_id);
     console.log(req.body);
     console.log(req.file);
     console.log('form data', formData);
