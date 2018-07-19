@@ -29,13 +29,17 @@ export default {
       recordingData: [],
       dataUrl: '',
       sound_id: 1,
-      title: "test-title"
+      title: "test-title",
+      startTime: '',
+      endTime: ''
     };
   },
   methods: {
-        toggleRecording: function() {
+
+    toggleRecording: function() {
         var that = this;
         this.isRecording = !this.isRecording;
+        
         if (this.isRecording) {
             navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
             navigator.getUserMedia({
@@ -52,6 +56,7 @@ export default {
                 }, function(error) {
                     alert(JSON.stringify(error));
             });
+            this.setStartTime();
         }
         else {
             this.audioRecorder.stop();
@@ -64,16 +69,27 @@ export default {
               that.dataUrl = window.URL.createObjectURL(blob);
               console.log(that.recordingData, that.dataUrl);
             };
+            this.setEndTime();
         }
     },
 
+    setStartTime: function(){
+      var today = new Date();
+      console.log(today.getFullYear() + "-" +  today.getMonth() + 1 + "-"+ today.getDate()  + " " + today.getHours() + ":"+ today.getMinutes() + ":" + today.getSeconds());
+      const time = today.getFullYear() + "-" +  today.getMonth() + 1 + "-"+ today.getDate()  + " " + today.getHours() + ":"+ today.getMinutes() + ":" + today.getSeconds();
+      this.startTime =  time;
+    },
+    setEndTime: function(){
+      this.endTime =  new Date()
+    },
+
     submitRecording: function(evt) {
-      console.log(this.recordingData , new Date(), this.sound_id);
+      console.log(this.recordingData , this.startTime,this.endTime, this.sound_id);
       apiService.createSound({
         title: this.title,
         recordingData : this.recordingData,
-        startTime: new Date(),
-        endTime: new Date()},
+        startTime: this.startTime,
+        endTime: this.endTime},
         this.sound_id
       )
         .then(newsoundid => {

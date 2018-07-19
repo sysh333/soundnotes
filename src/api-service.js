@@ -9,6 +9,8 @@ export default {
   },
   
   createItem: ({ text, time},sound_id) => {
+    console.log(time);
+    
     const options = {
       method: 'POST',
       body: JSON.stringify({ text, time }),
