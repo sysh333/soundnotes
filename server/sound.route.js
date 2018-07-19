@@ -28,15 +28,19 @@ router.post('/', upload.single('avatar'), async (req, res, next) => {
   try {
     connection = await db.getConnection();
     let formData = req.body;
-    console.log(req);
+    const { title, startTime, endTime, recording} = req.body;
     console.log(sound_id);
-    console.log(req.body);
-    console.log(req.file);
     console.log('form data', formData);
+    console.log(title);
+    console.log(startTime);
+    console.log(endTime);
+    console.log(recording);
 
-    //const queryInsert = 'INSERT INTO note (text, submit_time , sound_id) VALUES (?, ?, ?)';
-    //const [result] = await connection.query(queryInsert, [text, time, sound_id]);
-    res.json(formData);
+
+    const queryInsert = 'INSERT INTO sound (title, start_time , end_time, recordingData) VALUES (?, ?, ?, ?)';
+    const [result] = await connection.query(queryInsert, [title, startTime, endTime, recording]);
+    res.json(result.insertId);
+
   } catch (err) {
     next(err);
     console.log('*** catch ***',err); //クエリをエラーにしてコメントを外すと出力される

@@ -29,7 +29,7 @@ export default {
       recordingData: [],
       dataUrl: '',
       sound_id: 1,
-      tilte: "test-title"
+      title: "test-title"
     };
   },
   methods: {
@@ -70,14 +70,15 @@ export default {
     submitRecording: function(evt) {
       console.log(this.recordingData , new Date(), this.sound_id);
       apiService.createSound({
-        tilte: this.tilte,
+        title: this.title,
         recordingData : this.recordingData,
         startTime: new Date(),
         endTime: new Date()},
         this.sound_id
       )
-        .then(newitem => {
+        .then(newsoundid => {
           //this.items.push(newitem);
+          console.log(newsoundid)
         })
         .catch(e => {
           console.log('error saving account. e = ', e);
