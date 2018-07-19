@@ -74,13 +74,12 @@ export default {
     },
 
     setStartTime: function(){
-      var today = new Date();
-      console.log(today.getFullYear() + "-" +  today.getMonth() + 1 + "-"+ today.getDate()  + " " + today.getHours() + ":"+ today.getMinutes() + ":" + today.getSeconds());
-      const time = today.getFullYear() + "-" +  today.getMonth() + 1 + "-"+ today.getDate()  + " " + today.getHours() + ":"+ today.getMinutes() + ":" + today.getSeconds();
-      this.startTime =  time;
+      const startTime =  new Date()
+      this.startTime = startTime.toISOString()
     },
     setEndTime: function(){
-      this.endTime =  new Date()
+      const endTime =  new Date()
+      this.endTime = endTime.toISOString()
     },
 
     submitRecording: function(evt) {
