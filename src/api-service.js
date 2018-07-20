@@ -13,7 +13,7 @@ export default {
       method: 'GET',
     };
     return fetch(`/api/sound?sound_id=${sound_id}`, options)
-      .then(response => response); // <------- 
+      .then(); // <------- ?
   },
 
   createItem: ({ text, time},sound_id) => {

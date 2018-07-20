@@ -10,9 +10,9 @@ router.get('/', async (req, res, next) => {
   const sound_id = req.query.sound_id;
   try {
     connection = await db.getConnection();
-    const sound = await connection.query('select recordingData from `sound` WHERE `sound_id` = ? ',[sound_id]);
+    const sound = await connection.query('select recordingData from `sound` WHERE `id` = ? ',[sound_id]);
     res.send(sound);
-    console.log(sound);
+    console.log("sound = " , sound);
   } catch (err) {
      console.log('*** catch ***',err); //クエリをエラーにしてコメントを外すと出力される
     next(err);

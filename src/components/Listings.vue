@@ -7,7 +7,7 @@
       <span v-show="!isRecording">Start recording</span>
       <span v-show="isRecording">Stop recording</span>
     </button>
-    <button class="button green-button" v-if="dataUrl.length > 0" v-on:click.stop.prevent="togglePlay">
+    <button class="button green-button" v-if="dataUrl.length > 0" v-on:click.stop.prevent="getSound">
       <i class="play icon"></i> Play recording
     </button>
     <button class="button green-button" v-if="dataUrl.length > 0" v-on:click.stop.prevent="submitRecording">
@@ -41,6 +41,8 @@ export default {
         .then(audioElement => {
           this.audioElement = audioElement;
         });
+        console.log("getsound", this.audioElement);
+        this.togglePlay();
     },
     toggleRecording: function() {
         var that = this;
@@ -117,6 +119,7 @@ export default {
 //          audioElement.play();
 //          console.log('Media play ');
 //      }
+        console.log("togglePlay ",this.audioElement);
         (new Audio(this.audioElement)).play();
     },
   },
