@@ -7,10 +7,12 @@ const router = express.Router();
 
 router.get('/', async (req, res, next) => {
   let connection;
+  const sound_id = req.query.sound_id;
   try {
     connection = await db.getConnection();
-    const [rows] = await connection.query('select id, title, start_time, end_time, data_URL from sound');
-    res.json(rows);
+    const sound = await connection.query('select recordingData from `sound` WHERE `sound_id` = ? ',[sound_id]);
+    res.send(sound);
+    console.log(sound);
   } catch (err) {
      console.log('*** catch ***',err); //クエリをエラーにしてコメントを外すと出力される
     next(err);

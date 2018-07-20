@@ -7,7 +7,15 @@ export default {
     return fetch(`/api/note?sound_id=${sound_id}`, options)
       .then(response => response.json());
   },
-  
+
+  getSound: (sound_id) => {
+    const options = {
+      method: 'GET',
+    };
+    return fetch(`/api/sound?sound_id=${sound_id}`, options)
+      .then(response => response); // <------- 
+  },
+
   createItem: ({ text, time},sound_id) => {
     console.log(time);
     

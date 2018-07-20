@@ -28,14 +28,20 @@ export default {
       audioRecorder: null,
       recordingData: [],
       dataUrl: '',
-      sound_id: 1,
+      sound_id: 12,
       title: "test-title",
       startTime: '',
-      endTime: ''
+      endTime: '',
+      audioElement: null
     };
   },
   methods: {
-
+    getSound: function() {
+      apiService.getSound(this.sound_id)
+        .then(audioElement => {
+          this.audioElement = audioElement;
+        });
+    },
     toggleRecording: function() {
         var that = this;
         this.isRecording = !this.isRecording;
@@ -102,14 +108,16 @@ export default {
     },
 
     togglePlay: function() {
-      var audioElement = document.getElementById("audio");
-      if (audioElement.paused === false) {
-          audioElement.pause();
-          console.log('Media play pause');
-      } else {
-          audioElement.play();
-          console.log('Media play ');
-      }
+//     var audioElement = document.getElementById("audio");
+//     var audioElement = this.audioElement;
+//      if (audioElement.paused === false) {
+//          audioElement.pause();
+//          console.log('Media play pause');
+//      } else {
+//          audioElement.play();
+//          console.log('Media play ');
+//      }
+        (new Audio(this.audioElement)).play();
     },
   },
 };
