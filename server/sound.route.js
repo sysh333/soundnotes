@@ -12,11 +12,14 @@ router.get('/', async (req, res, next) => {
     //connection = await db.getConnection();
     //const sound = await connection.query('select recordingData from `sound` WHERE `id` = ? ',[sound_id]);
     var fs = require("fs");
-    fs.readFile("./uploads/house01.mp3", (error, data) => { //813378d48e14eb146b63578cf6c2d240
+    fs.readFile("./uploads/1d08f3fa9d49c54475111d27ac063a47", (error, data) => {
       if (error) {
         console.log(error);
       }
       console.log(data);
+      res.set({
+        'content-type': 'audio/webm'
+      });
      res.send(data);
      console.log("data----" , data)
      });
@@ -48,7 +51,7 @@ router.post('/', upload.single('recording'), async (req, res, next) => {
     console.log(req.file);
 
 
-    const queryInsert = 'INSERT INTO sound (title, start_time , end_time) VALUES (?, ?, ?, ?)';
+    const queryInsert = 'INSERT INTO sound (title, start_time , end_time) VALUES (?, ?, ?)';
     const [result] = await connection.query(queryInsert, [title, startTime, endTime]);
     res.json(result.insertId);
 

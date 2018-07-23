@@ -11,6 +11,9 @@ export default {
   getSound: (sound_id) => {
     const options = {
       method: 'GET',
+      headers: {
+        'content-type': 'audio/webm'
+      },
     };
     return fetch(`/api/sound?sound_id=${sound_id}`, options)
       .then(response => response.blob());
@@ -51,9 +54,9 @@ export default {
     const options = {
       method: 'POST',
       body: formData,
-      //headers: {
-      //  'content-type': 'undefined',
-      //},
+//      headers: {
+//        'content-type': 'multipart/form-data',
+//      },
     };
     return fetch(`/api/sound?sound_id=${sound_id}`, options)
       .then((response) => {
