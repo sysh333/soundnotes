@@ -45,8 +45,8 @@ export default {
           this.rblob = rblob;
           this.togglePlay();
         });
-        //console.log("rblob ----", this.rblob);
-        //console.log("dataurl ----", this.dataUrl);
+        console.log("rblob ----", this.rblob);
+        console.log("dataurl ----", this.dataUrl);
         this.getSoundInfo();
     },
     getSoundInfo: function() {
