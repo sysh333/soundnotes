@@ -7,15 +7,18 @@
       <span v-show="!isRecording">Start recording</span>
       <span v-show="isRecording">Stop recording</span>
     </button>
-    <button class="button green-button" v-if="dataUrl.length > 0" v-on:click.stop.prevent="togglePlay">
+    <button class="button green-button" v-on:click.stop.prevent="getSound">
       <i class="play icon"></i> Play recording
+    </button>
+    <button class="button green-button" v-on:click.stop.prevent="submitRecording">
+      <i class="send icon"></i> Send recording
     </button>
     <audio id="audio" v-bind:src='dataUrl' preload="auto"></audio>
   </div>
 </template>
 
 <script>
-//import apiService from "../api-service";
+import apiService from "../api-service";
 
 export default {
   name: 'Homepage',
@@ -24,13 +27,41 @@ export default {
       isRecording: false,
       audioRecorder: null,
       recordingData: [],
-      dataUrl: ''
+      dataUrl: '',
+      sound_id: 2,
+      title: "test-title",
+      startTime: '',
+      endTime: '',
+      audioElement: null,
+      blob: null,
+      rblob: null
     };
   },
   methods: {
-        toggleRecording: function() {
+    getSound: function() {
+      apiService.getSound(this.sound_id)
+        .then(rblob => {
+          this.dataUrl = window.URL.createObjectURL(rblob);
+          this.rblob = rblob;
+          setTimeout(() => {
+            this.togglePlay();
+          }, 100);
+        });
+        this.getSoundInfo();
+    },
+    getSoundInfo: function() {
+      apiService.getSoundInfo(this.sound_id)
+        .then( items=> {
+          const { title, startTime, endTime} = items;
+          console.log(title);
+          console.log(startTime);
+          console.log(endTime);
+        });
+    },
+    toggleRecording: function() {
         var that = this;
         this.isRecording = !this.isRecording;
+        
         if (this.isRecording) {
             navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
             navigator.getUserMedia({
@@ -47,6 +78,7 @@ export default {
                 }, function(error) {
                     alert(JSON.stringify(error));
             });
+            this.setStartTime();
         }
         else {
             this.audioRecorder.stop();
@@ -55,21 +87,55 @@ export default {
             };
             this.audioRecorder.onstop = function(event) {
               console.log('Media recorder stopped');
-              var blob = new Blob(that.recordingData, { type: 'audio/webm'});
-              that.dataUrl = window.URL.createObjectURL(blob);
-              console.log(that.recordingData, that.dataUrl);
+              that.blob = new Blob(that.recordingData, { type: 'audio/webm'});
+              //this.blob = blob;
+              //that.dataUrl = window.URL.createObjectURL(that.blob);
+              console.log("blob -", that.blob);
             };
-        }
+            this.setEndTime();
+            console.log("blob --", this.blob);
+        };
     },
+
+    setStartTime: function(){
+      const startTime =  new Date()
+      this.startTime = startTime.toISOString()
+    },
+    setEndTime: function(){
+      const endTime =  new Date()
+      this.endTime = endTime.toISOString()
+    },
+
+    submitRecording: function(evt) {
+      console.log("blob --- ", this.blob);
+      apiService.createSound({
+        title: this.title,
+        blob : this.blob,
+        startTime: this.startTime,
+        endTime: this.endTime},
+        this.sound_id
+      )
+        .then(newsoundid => {
+          //this.items.push(newitem);
+          console.log(newsoundid)
+        })
+        .catch(e => {
+          console.log('error saving account. e = ', e);
+          //this.setMessage('There was an error adding your item');
+        });
+    },
+
     togglePlay: function() {
-      var audioElement = document.getElementById("audio");
+    console.log("dataurl -----", this.dataUrl);
+    var audioElement = document.getElementById("audio");
       if (audioElement.paused === false) {
-          audioElement.pause();
-          console.log('Media play pause');
-      } else {
-          audioElement.play();
-          console.log('Media play ');
-      }
+        audioElement.pause();
+        console.log('Media play pause');
+     } else {
+        console.log("audioElement-" ,audioElement)
+        audioElement.play();
+        console.log('Media play ');
+     }
     },
   },
 };
