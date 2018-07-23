@@ -12,7 +12,7 @@ router.get('/', async (req, res, next) => {
     //connection = await db.getConnection();
     //const sound = await connection.query('select recordingData from `sound` WHERE `id` = ? ',[sound_id]);
     var fs = require("fs");
-    fs.readFile("./uploads/1d08f3fa9d49c54475111d27ac063a47", (error, data) => {
+    fs.readFile("./uploads/d4f818aa28c7cfc4d469f15b78de61fb", (error, data) => {
       if (error) {
         console.log(error);
       }

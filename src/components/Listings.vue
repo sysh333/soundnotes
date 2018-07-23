@@ -41,12 +41,12 @@ export default {
     getSound: function() {
       apiService.getSound(this.sound_id)
         .then(rblob => {
-          this.dataUrl = window.URL.createObjectURL(rblob); 
+          this.dataUrl = window.URL.createObjectURL(rblob);
           this.rblob = rblob;
-          this.togglePlay();
+          setTimeout(() => {
+            this.togglePlay();
+          }, 100);
         });
-        console.log("rblob ----", this.rblob);
-        console.log("dataurl ----", this.dataUrl);
         this.getSoundInfo();
     },
     getSoundInfo: function() {
