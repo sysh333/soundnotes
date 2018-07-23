@@ -9,10 +9,21 @@ router.get('/', async (req, res, next) => {
   let connection;
   const sound_id = req.query.sound_id;
   try {
-    connection = await db.getConnection();
-    const sound = await connection.query('select recordingData from `sound` WHERE `id` = ? ',[sound_id]);
-    res.send(sound);
-    console.log("sound = " , sound);
+    //connection = await db.getConnection();
+    //const sound = await connection.query('select recordingData from `sound` WHERE `id` = ? ',[sound_id]);
+    var fs = require("fs");
+    fs.readFile("./uploads/house01.mp3", (error, data) => { //813378d48e14eb146b63578cf6c2d240
+      if (error) {
+        console.log(error);
+      }
+      console.log(data);
+     res.send(data);
+     console.log("data----" , data)
+     });
+    
+    
+    //res.send(sound);
+    //console.log("sound = " , sound);
   } catch (err) {
      console.log('*** catch ***',err); //クエリをエラーにしてコメントを外すと出力される
     next(err);
@@ -23,24 +34,22 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-router.post('/', upload.single('avatar'), async (req, res, next) => { 
+router.post('/', upload.single('recording'), async (req, res, next) => { 
   let connection;
   const sound_id = req.query.sound_id;
 
   try {
     connection = await db.getConnection();
-    let formData = req.body;
-    const { title, startTime, endTime, recording} = req.body;
+    const { title, startTime, endTime} = req.body;
     console.log(sound_id);
-    console.log('form data', formData);
     console.log(title);
     console.log(startTime);
     console.log(endTime);
-    console.log(recording);
+    console.log(req.file);
 
 
-    const queryInsert = 'INSERT INTO sound (title, start_time , end_time, recordingData) VALUES (?, ?, ?, ?)';
-    const [result] = await connection.query(queryInsert, [title, startTime, endTime, recording]);
+    const queryInsert = 'INSERT INTO sound (title, start_time , end_time) VALUES (?, ?, ?, ?)';
+    const [result] = await connection.query(queryInsert, [title, startTime, endTime]);
     res.json(result.insertId);
 
   } catch (err) {

@@ -13,7 +13,15 @@ export default {
       method: 'GET',
     };
     return fetch(`/api/sound?sound_id=${sound_id}`, options)
-      .then(); // <------- ?
+      .then(response => response.blob());
+  },
+
+  getSoundInfo: (sound_id) => {
+    const options = {
+      method: 'GET',
+    };
+    return fetch(`/api/info?sound_id=${sound_id}`, options)  // <-------
+      .then(response => response.json());
   },
 
   createItem: ({ text, time},sound_id) => {
@@ -34,12 +42,12 @@ export default {
         return response.json();
       });
   },
-  createSound: ({ title, recordingData, startTime, endTime},sound_id) => {
+  createSound: ({ title, blob, startTime, endTime},sound_id) => {
     var formData = new FormData();
     formData.append("title", title);
     formData.append("startTime", startTime);
     formData.append("endTime", endTime);
-    formData.append('recording', recordingData);
+    formData.append('recording', blob, "test.webm"); // <---- add filename formData.append('recording', blob, `$(sound_id)_file`);
     const options = {
       method: 'POST',
       body: formData,
