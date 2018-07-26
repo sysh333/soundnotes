@@ -3,9 +3,10 @@ const db = require('./connection');
 
 const router = express.Router();
 
-router.get('/', async (req, res, next) => {
+router.get('/:id(\\d+)/note', async (req, res, next) => {
   let connection;
-  const sound_id = req.query.sound_id;
+  const sound_id = req.params.id;
+  console.log("params = ", sound_id);
   try {
     connection = await db.getConnection();
     const [rows] = await connection.query('select id, text, submit_time from `note` WHERE `sound_id` = ? ORDER BY submit_time',[sound_id]);

@@ -1,10 +1,10 @@
 export default {
   
-  getItems: (sound_id) => {
+  getNote: (sound_id) => {
     const options = {
       method: 'GET',
     };
-    return fetch(`/api/note?sound_id=${sound_id}`, options)
+    return fetch(`/api/sound/${sound_id}/note`, options)
       .then(response => response.json());
   },
 
@@ -23,13 +23,11 @@ export default {
     const options = {
       method: 'GET',
     };
-    return fetch(`/api/info?sound_id=${sound_id}`, options)  // <-------
+    return fetch(`/api/info?sound_id=${sound_id}`, options) 
       .then(response => response.json());
   },
 
-  createItem: ({ text, time},sound_id) => {
-    console.log(time);
-    
+  createNote: ({ text, time},sound_id) => {
     const options = {
       method: 'POST',
       body: JSON.stringify({ text, time }),
@@ -37,7 +35,7 @@ export default {
         'content-type': 'application/json',
       },
     };
-    return fetch(`/api/note?sound_id=${sound_id}`, options)
+    return fetch(`/api/sound/${sound_id}/note`, options)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Error in POST /api/note");
@@ -45,6 +43,7 @@ export default {
         return response.json();
       });
   },
+
   createSound: ({ title, blob, startTime, endTime},sound_id) => {
     var formData = new FormData();
     formData.append("title", title);
@@ -54,9 +53,6 @@ export default {
     const options = {
       method: 'POST',
       body: formData,
-//      headers: {
-//        'content-type': 'multipart/form-data',
-//      },
     };
     return fetch(`/api/sound?sound_id=${sound_id}`, options)
       .then((response) => {
@@ -66,21 +62,4 @@ export default {
         return response.json();
       });
   },
-  /*
-  deleteItem: (item) => {
-    console.log('item = ', item);
-    // DELETE request:
-    // /api/items?id=${id}
-    const options = {
-      method: 'DELETE',
-    };
-    return fetch(`/api/items?id=${item.id}`, options)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Error in DELETE /api/items");
-        }
-        return response.json();
-      });
-  },
-  */
 };

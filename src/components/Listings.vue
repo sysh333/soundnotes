@@ -34,7 +34,6 @@ export default {
       endTime: '',
       audioElement: null,
       blob: null,
-      rblob: null
     };
   },
   methods: {
@@ -42,7 +41,6 @@ export default {
       apiService.getSound(this.sound_id)
         .then(rblob => {
           this.dataUrl = window.URL.createObjectURL(rblob);
-          this.rblob = rblob;
           setTimeout(() => {
             this.togglePlay();
           }, 100);
