@@ -10,7 +10,7 @@ const app = express();
 app.use(bodyParser.json());
 
 // TODO add routes ----
-app.use('/api/note', noteRoute);
+//app.use('/api/note', noteRoute);
 app.use('/api/sound', soundRoute);
 app.use('/api/info', infoRoute);
 

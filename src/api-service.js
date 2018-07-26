@@ -8,14 +8,14 @@ export default {
       .then(response => response.json());
   },
 
-  getSound: (sound_id) => {
+  getSoundRaw: (sound_id) => {
     const options = {
       method: 'GET',
       headers: {
         'content-type': 'audio/webm'
       },
     };
-    return fetch(`/api/sound?sound_id=${sound_id}`, options)
+    return fetch(`/api/sound/${sound_id}/raw`, options)
       .then(response => response.blob());
   },
 
@@ -39,6 +39,22 @@ export default {
       .then((response) => {
         if (!response.ok) {
           throw new Error("Error in POST /api/note");
+        }
+        return response.json();
+      });
+  },
+
+  createSoundRaw: ({ blob },sound_id) => {
+    var formData = new FormData();
+    formData.append('recording', blob, `${sound_id}.webm`); // <---- add filename formData.append('recording', blob, `$(sound_id)_file`);
+    const options = {
+      method: 'POST',
+      body: formData,
+    };
+    return fetch(`/api/sound/${sound_id}/raw`, options)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Error in POST /api/sound");
         }
         return response.json();
       });

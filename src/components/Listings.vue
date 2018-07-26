@@ -38,7 +38,7 @@ export default {
   },
   methods: {
     getSound: function() {
-      apiService.getSound(this.sound_id)
+      apiService.getSoundRaw(this.sound_id)
         .then(rblob => {
           this.dataUrl = window.URL.createObjectURL(rblob);
           setTimeout(() => {
@@ -86,12 +86,8 @@ export default {
             this.audioRecorder.onstop = function(event) {
               console.log('Media recorder stopped');
               that.blob = new Blob(that.recordingData, { type: 'audio/webm'});
-              //this.blob = blob;
-              //that.dataUrl = window.URL.createObjectURL(that.blob);
-              console.log("blob -", that.blob);
             };
             this.setEndTime();
-            console.log("blob --", this.blob);
         };
     },
 
@@ -105,8 +101,7 @@ export default {
     },
 
     submitRecording: function(evt) {
-      console.log("blob --- ", this.blob);
-      apiService.createSound({
+      apiService.createSoundRaw({
         title: this.title,
         blob : this.blob,
         startTime: this.startTime,
@@ -124,13 +119,11 @@ export default {
     },
 
     togglePlay: function() {
-    console.log("dataurl -----", this.dataUrl);
     var audioElement = document.getElementById("audio");
       if (audioElement.paused === false) {
         audioElement.pause();
         console.log('Media play pause');
      } else {
-        console.log("audioElement-" ,audioElement)
         audioElement.play();
         console.log('Media play ');
      }

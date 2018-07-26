@@ -1,7 +1,15 @@
 const express = require('express');
 const db = require('./connection');
-var multer  = require('multer')
-var upload = multer({ dest: 'uploads/' })
+var multer = require('multer');
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/')
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname)
+  }
+})
+var upload = multer({ storage: storage })
 
 const router = express.Router();
 
@@ -50,7 +58,7 @@ router.get('/:id(\\d+)/raw', async (req, res, next) => {
   const sound_id = req.params.id;
   try {
     var fs = require("fs");
-    fs.readFile("./uploads/d4f818aa28c7cfc4d469f15b78de61fb", (error, data) => {
+    fs.readFile(`./uploads/${sound_id}.webm`, (error, data) => {
       if (error) {
         console.log(error);
       }
@@ -67,6 +75,10 @@ router.get('/:id(\\d+)/raw', async (req, res, next) => {
       connection.close();
     }
   }
+});
+
+router.post('/:id(\\d+)/raw', upload.single('recording'), function(req, res) {
+  console.log("multer sucsess");
 });
 
 router.post('/', upload.single('recording'), async (req, res, next) => { 
