@@ -1,5 +1,13 @@
 export default {
   
+  getSound: () => {
+    const options = {
+      method: 'GET',
+    };
+    return fetch(`/api/sound`, options)
+      .then(response => response.json());
+  },
+
   getNote: (sound_id) => {
     const options = {
       method: 'GET',
@@ -23,7 +31,7 @@ export default {
     const options = {
       method: 'GET',
     };
-    return fetch(`/api/info?sound_id=${sound_id}`, options) 
+    return fetch(`/api/sound/${sound_id}`, options) 
       .then(response => response.json());
   },
 
@@ -60,17 +68,15 @@ export default {
       });
   },
 
-  createSound: ({ title, blob, startTime, endTime},sound_id) => {
-    var formData = new FormData();
-    formData.append("title", title);
-    formData.append("startTime", startTime);
-    formData.append("endTime", endTime);
-    formData.append('recording', blob, "test.webm"); // <---- add filename formData.append('recording', blob, `$(sound_id)_file`);
+  createSoundInfo: ({ title, startTime, endTime}) => {
     const options = {
       method: 'POST',
-      body: formData,
+      body: JSON.stringify({ title, startTime, endTime }),
+      headers: {
+        'content-type': 'application/json',
+      },
     };
-    return fetch(`/api/sound?sound_id=${sound_id}`, options)
+    return fetch(`/api/sound`, options)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Error in POST /api/sound");

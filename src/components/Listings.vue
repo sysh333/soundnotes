@@ -28,7 +28,7 @@ export default {
       audioRecorder: null,
       recordingData: [],
       dataUrl: '',
-      sound_id: 2,
+      sound_id: 1,
       title: "test-title",
       startTime: '',
       endTime: '',
