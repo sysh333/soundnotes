@@ -35,6 +35,7 @@ export default {
       .then(response => response.json());
   },
 
+
   createNote: ({ text, time},sound_id) => {
     const options = {
       method: 'POST',
@@ -84,4 +85,22 @@ export default {
         return response.json();
       });
   },
+
+  putSoundInfo: ({ endTime},sound_id) => {
+    const options = {
+      method: 'PUT',
+      body: JSON.stringify({ endTime }),
+      headers: {
+        'content-type': 'application/json',
+      },
+    };
+    return fetch(`/api/sound/${sound_id}`, options)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Error in PUT /api/sound");
+        }
+        return response.json();
+      });
+  },
+
 };

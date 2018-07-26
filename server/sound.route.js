@@ -133,4 +133,23 @@ router.post('/', async (req, res, next) => {
   }
 });
 
+router.put('/:id(\\d+)/', async (req, res, next) => {
+  let connection;
+  const sound_id = req.params.id;
+  const { endTime } = req.body;
+  try {
+    connection = await db.getConnection();
+    const queryInsert = 'UPDATE sound ? WHERE `sound_id` = ?';
+    const [result] = await connection.query(queryInsert, [endTime, sound_id]);
+    res.json({ id: result.insertId});
+  } catch (err) {
+    next(err);
+    console.log('*** catch ***',err);
+  } finally {
+    if (connection) {
+      connection.close();
+    }
+  }
+});
+
 module.exports = router;
