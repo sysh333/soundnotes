@@ -29,13 +29,13 @@ export default {
     return {
       text: '',
       time: '',
-      sound_id: 1,
+      sound_id: 2,
       items: [],
     };
   },
   methods: {
-    getItems: function() {
-      apiService.getItems(this.sound_id)
+    getNote: function() {
+      apiService.getNote(this.sound_id)
         .then(items => {
           this.items = items;
         });
@@ -43,7 +43,7 @@ export default {
     addText: function(evt) {
       evt.preventDefault();
       console.log(this.text , new Date(), this.sound_id);
-      apiService.createItem({
+      apiService.createNote({
         text: this.text,
         time: new Date()},
         this.sound_id
@@ -68,7 +68,7 @@ export default {
   // },
   },
   mounted: function() {
-    this.getItems();
+    this.getNote();
   },
 };
 </script>

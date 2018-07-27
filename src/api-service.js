@@ -1,21 +1,29 @@
 export default {
   
-  getItems: (sound_id) => {
+  getSound: () => {
     const options = {
       method: 'GET',
     };
-    return fetch(`/api/note?sound_id=${sound_id}`, options)
+    return fetch(`/api/sound`, options)
       .then(response => response.json());
   },
 
-  getSound: (sound_id) => {
+  getNote: (sound_id) => {
+    const options = {
+      method: 'GET',
+    };
+    return fetch(`/api/sound/${sound_id}/note`, options)
+      .then(response => response.json());
+  },
+
+  getSoundRaw: (sound_id) => {
     const options = {
       method: 'GET',
       headers: {
         'content-type': 'audio/webm'
       },
     };
-    return fetch(`/api/sound?sound_id=${sound_id}`, options)
+    return fetch(`/api/sound/${sound_id}/raw`, options)
       .then(response => response.blob());
   },
 
@@ -23,13 +31,12 @@ export default {
     const options = {
       method: 'GET',
     };
-    return fetch(`/api/info?sound_id=${sound_id}`, options)  // <-------
+    return fetch(`/api/sound/${sound_id}`, options) 
       .then(response => response.json());
   },
 
-  createItem: ({ text, time},sound_id) => {
-    console.log(time);
-    
+
+  createNote: ({ text, time},sound_id) => {
     const options = {
       method: 'POST',
       body: JSON.stringify({ text, time }),
@@ -37,7 +44,7 @@ export default {
         'content-type': 'application/json',
       },
     };
-    return fetch(`/api/note?sound_id=${sound_id}`, options)
+    return fetch(`/api/sound/${sound_id}/note`, options)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Error in POST /api/note");
@@ -45,20 +52,15 @@ export default {
         return response.json();
       });
   },
-  createSound: ({ title, blob, startTime, endTime},sound_id) => {
+
+  createSoundRaw: ({ blob },sound_id) => {
     var formData = new FormData();
-    formData.append("title", title);
-    formData.append("startTime", startTime);
-    formData.append("endTime", endTime);
-    formData.append('recording', blob, "test.webm"); // <---- add filename formData.append('recording', blob, `$(sound_id)_file`);
+    formData.append('recording', blob, `${sound_id}.webm`); // <---- add filename formData.append('recording', blob, `$(sound_id)_file`);
     const options = {
       method: 'POST',
       body: formData,
-//      headers: {
-//        'content-type': 'multipart/form-data',
-//      },
     };
-    return fetch(`/api/sound?sound_id=${sound_id}`, options)
+    return fetch(`/api/sound/${sound_id}/raw`, options)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Error in POST /api/sound");
@@ -66,21 +68,39 @@ export default {
         return response.json();
       });
   },
-  /*
-  deleteItem: (item) => {
-    console.log('item = ', item);
-    // DELETE request:
-    // /api/items?id=${id}
+
+  createSoundInfo: ({ title, startTime, endTime}) => {
     const options = {
-      method: 'DELETE',
+      method: 'POST',
+      body: JSON.stringify({ title, startTime, endTime }),
+      headers: {
+        'content-type': 'application/json',
+      },
     };
-    return fetch(`/api/items?id=${item.id}`, options)
+    return fetch(`/api/sound`, options)
       .then((response) => {
         if (!response.ok) {
-          throw new Error("Error in DELETE /api/items");
+          throw new Error("Error in POST /api/sound");
         }
         return response.json();
       });
   },
-  */
+
+  putSoundInfo: ({ endTime},sound_id) => {
+    const options = {
+      method: 'PUT',
+      body: JSON.stringify({ endTime }),
+      headers: {
+        'content-type': 'application/json',
+      },
+    };
+    return fetch(`/api/sound/${sound_id}`, options)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Error in PUT /api/sound");
+        }
+        return response.json();
+      });
+  },
+
 };

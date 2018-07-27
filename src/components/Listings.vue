@@ -1,5 +1,15 @@
 <template>
   <div class="homepage">
+    <div class="sound-list">
+        <h2>Soundlist</h2>
+        <ul>
+          <li v-for="sound of sounds" v-bind:key="sound.id">
+            <div class="single-item">
+              <span class="item-label">{{ sound.title }}</span>
+            </div>
+          </li>
+        </ul>
+    </div>
     <h1>recording</h1>
     <button class="button red-button" v-on:click.stop.prevent="toggleRecording">
       <i class="stop icon" v-show="isRecording"></i>
@@ -7,13 +17,16 @@
       <span v-show="!isRecording">Start recording</span>
       <span v-show="isRecording">Stop recording</span>
     </button>
-    <button class="button green-button" v-on:click.stop.prevent="getSound">
+    <button class="button green-button" v-on:click.stop.prevent="getSoundRaw">
       <i class="play icon"></i> Play recording
     </button>
     <button class="button green-button" v-on:click.stop.prevent="submitRecording">
       <i class="send icon"></i> Send recording
     </button>
-    <audio id="audio" v-bind:src='dataUrl' preload="auto"></audio>
+    <button class="button green-button" v-on:click.stop.prevent="goPlay">
+      <i class="send icon"></i> go to
+    </button>
+    <audio id="audio" controls v-bind:src='dataUrl' preload="auto"></audio>
   </div>
 </template>
 
@@ -24,25 +37,33 @@ export default {
   name: 'Homepage',
   data() {
     return {
+      sounds: [],
       isRecording: false,
       audioRecorder: null,
       recordingData: [],
       dataUrl: '',
-      sound_id: 2,
+      sound_id: 1,
       title: "test-title",
       startTime: '',
       endTime: '',
       audioElement: null,
       blob: null,
-      rblob: null
+      gapSeconds: 3
     };
   },
   methods: {
     getSound: function() {
-      apiService.getSound(this.sound_id)
+      apiService.getSound()
+        .then(sounds => {
+          this.sounds = sounds;
+                console.log(this.sounds);
+        });
+    },
+
+    getSoundRaw: function() {
+      apiService.getSoundRaw(this.sound_id)
         .then(rblob => {
           this.dataUrl = window.URL.createObjectURL(rblob);
-          this.rblob = rblob;
           setTimeout(() => {
             this.togglePlay();
           }, 100);
@@ -88,12 +109,8 @@ export default {
             this.audioRecorder.onstop = function(event) {
               console.log('Media recorder stopped');
               that.blob = new Blob(that.recordingData, { type: 'audio/webm'});
-              //this.blob = blob;
-              //that.dataUrl = window.URL.createObjectURL(that.blob);
-              console.log("blob -", that.blob);
             };
             this.setEndTime();
-            console.log("blob --", this.blob);
         };
     },
 
@@ -107,8 +124,7 @@ export default {
     },
 
     submitRecording: function(evt) {
-      console.log("blob --- ", this.blob);
-      apiService.createSound({
+      apiService.createSoundRaw({
         title: this.title,
         blob : this.blob,
         startTime: this.startTime,
@@ -126,17 +142,25 @@ export default {
     },
 
     togglePlay: function() {
-    console.log("dataurl -----", this.dataUrl);
     var audioElement = document.getElementById("audio");
       if (audioElement.paused === false) {
         audioElement.pause();
         console.log('Media play pause');
      } else {
-        console.log("audioElement-" ,audioElement)
         audioElement.play();
         console.log('Media play ');
      }
     },
+
+    goPlay: function() {
+    var audioElement = document.getElementById("audio");
+        audioElement.currentTime = this.gapSeconds ;
+        audioElement.play();
+        console.log('Media play ');
+    },
+  },
+  mounted: function() {
+    this.getSound();
   },
 };
 </script>
