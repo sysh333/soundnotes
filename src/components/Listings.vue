@@ -1,5 +1,15 @@
 <template>
   <div class="homepage">
+    <div class="sound-list">
+        <h2>Soundlist</h2>
+        <ul>
+          <li v-for="sound of sounds" v-bind:key="sound.id">
+            <div class="single-item">
+              <span class="item-label">{{ sound.title }}</span>
+            </div>
+          </li>
+        </ul>
+    </div>
     <h1>recording</h1>
     <button class="button red-button" v-on:click.stop.prevent="toggleRecording">
       <i class="stop icon" v-show="isRecording"></i>
@@ -7,7 +17,7 @@
       <span v-show="!isRecording">Start recording</span>
       <span v-show="isRecording">Stop recording</span>
     </button>
-    <button class="button green-button" v-on:click.stop.prevent="getSound">
+    <button class="button green-button" v-on:click.stop.prevent="getSoundRaw">
       <i class="play icon"></i> Play recording
     </button>
     <button class="button green-button" v-on:click.stop.prevent="submitRecording">
@@ -27,6 +37,7 @@ export default {
   name: 'Homepage',
   data() {
     return {
+      sounds: [],
       isRecording: false,
       audioRecorder: null,
       recordingData: [],
@@ -42,6 +53,14 @@ export default {
   },
   methods: {
     getSound: function() {
+      apiService.getSound()
+        .then(sounds => {
+          this.sounds = sounds;
+                console.log(this.sounds);
+        });
+    },
+
+    getSoundRaw: function() {
       apiService.getSoundRaw(this.sound_id)
         .then(rblob => {
           this.dataUrl = window.URL.createObjectURL(rblob);
@@ -139,6 +158,9 @@ export default {
         audioElement.play();
         console.log('Media play ');
     },
+  },
+  mounted: function() {
+    this.getSound();
   },
 };
 </script>

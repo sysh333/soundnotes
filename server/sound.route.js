@@ -18,8 +18,9 @@ router.get('/', async (req, res, next) => {
   let connection;
   try {
     connection = await db.getConnection();
-    const [rows] = await connection.query('title, startTime from `sound` ORDER BY startTime');
+    const [rows] = await connection.query('select id, title, start_time from `sound` ORDER BY start_time');
     res.json(rows);
+    console.log(rows);
   } catch (err) {
      console.log('*** catch ***',err);
     next(err);
@@ -37,6 +38,7 @@ router.get('/:id(\\d+)/note', async (req, res, next) => {
     connection = await db.getConnection();
     const [rows] = await connection.query('select id, text, submit_time from `note` WHERE `sound_id` = ? ORDER BY submit_time',[sound_id]);
     res.json(rows);
+    console.log(rows);
   } catch (err) {
      console.log('*** catch ***',err);
     next(err);
