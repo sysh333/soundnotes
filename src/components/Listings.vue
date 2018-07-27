@@ -13,7 +13,10 @@
     <button class="button green-button" v-on:click.stop.prevent="submitRecording">
       <i class="send icon"></i> Send recording
     </button>
-    <audio id="audio" v-bind:src='dataUrl' preload="auto"></audio>
+    <button class="button green-button" v-on:click.stop.prevent="goPlay">
+      <i class="send icon"></i> go to
+    </button>
+    <audio id="audio" controls v-bind:src='dataUrl' preload="auto"></audio>
   </div>
 </template>
 
@@ -34,6 +37,7 @@ export default {
       endTime: '',
       audioElement: null,
       blob: null,
+      gapSeconds: 3
     };
   },
   methods: {
@@ -127,6 +131,13 @@ export default {
         audioElement.play();
         console.log('Media play ');
      }
+    },
+
+    goPlay: function() {
+    var audioElement = document.getElementById("audio");
+        audioElement.currentTime = this.gapSeconds ;
+        audioElement.play();
+        console.log('Media play ');
     },
   },
 };
