@@ -69,10 +69,10 @@ export default {
       });
   },
 
-  createSoundInfo: ({ title, startTime, endTime}) => {
+  createSound: ({ title,startTime}) => {
     const options = {
       method: 'POST',
-      body: JSON.stringify({ title, startTime, endTime }),
+      body: JSON.stringify({ title, startTime }),
       headers: {
         'content-type': 'application/json',
       },
