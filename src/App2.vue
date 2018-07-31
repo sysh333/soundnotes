@@ -47,7 +47,7 @@
           <label>Title</label>
           <md-input v-model="title" md-counter="30"></md-input>
         </md-field>
-        <p v-for="item of items" v-bind:key="item.id">{{ item.text }}</p>
+        <p v-for="item of items" v-bind:key="item.id" v-on:click="getGapTime(item)" >{{ item.text }}</p>
         <md-field>
           <label>Textarea</label>
           <md-textarea v-model="text"></md-textarea>
@@ -108,12 +108,14 @@ export default {
         });
     },
 
-    getSound: function() {
-      apiService.getSound()
-        .then(sounds => {
-          this.sounds = sounds;
-                console.log(this.sounds);
-        });
+    getGapTime: function(item) {
+      console.log(item.time);
+      console.log(this.startTime);
+      var d1 = new Date(item.time);
+      var d2 = new Date(this.startTime);
+      this.gapSeconds =  (d1 - d2)/1000;
+      console.log(this.gapSeconds);
+      this.goPlay();
     },
 
     getSoundRaw: function() {
@@ -135,6 +137,15 @@ export default {
           console.log(endTime);
         });
     },
+
+    getSound: function() {
+      apiService.getSound()
+        .then(sounds => {
+          this.sounds = sounds;
+                console.log(this.sounds);
+        });
+    },
+
     toggleRecording: function() {
         var that = this;
         this.isRecording = !this.isRecording;
