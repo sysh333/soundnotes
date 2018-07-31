@@ -86,10 +86,10 @@ export default {
       });
   },
 
-  putSoundInfo: ({ endTime},sound_id) => {
+  putSoundInfo: ({ title,startTime,endTime},sound_id) => {
     const options = {
       method: 'PUT',
-      body: JSON.stringify({ endTime }),
+      body: JSON.stringify({ title, startTime, endTime }),
       headers: {
         'content-type': 'application/json',
       },

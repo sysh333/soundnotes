@@ -156,11 +156,11 @@ router.post('/:id(\\d+)/raw', upload.single('recording'), function(req, res) {
 router.put('/:id(\\d+)/', async (req, res, next) => {
   let connection;
   const sound_id = req.params.id;
-  const { endTime } = req.body;
+  const { title, startTime,endTime } = req.body;
   try {
     connection = await db.getConnection();
-    const queryInsert = 'UPDATE sound ? WHERE `sound_id` = ?';
-    const [result] = await connection.query(queryInsert, [endTime, sound_id]);
+    const queryInsert = 'UPDATE sound SET title = ?, start_time = ? ,end_time = ? WHERE `id` = ?';
+    const [result] = await connection.query(queryInsert, [title, startTime, endTime, sound_id]);
     res.json({ id: result.insertId});
   } catch (err) {
     next(err);

@@ -3,8 +3,17 @@
     <md-app>
       <md-app-toolbar class="md-primary">
         <span class="md-title">Recording</span>
-      <md-button class="md-raised">Start Recording</md-button>
-      <md-button class="md-raised md-accent">submit</md-button>
+      <!-- <md-button class="md-raised">Start Recording</md-button> -->
+      <md-button class="md-raised" v-on:click.stop.prevent="toggleRecording">
+        <i class="stop icon" v-show="isRecording"></i>
+        <i class="record icon" v-show="!isRecording"></i>
+        <span v-show="!isRecording">Start recording</span>
+        <span v-show="isRecording">End recording</span>
+      </md-button>
+
+      <md-button class="md-raised md-accent" v-on:click.stop.prevent="submitRecording">submit</md-button>
+      <md-button class="md-raised md-accent" v-on:click.stop.prevent="getSoundRaw">play</md-button>
+      <audio id="audio" style="display:block; width: 100%" controls v-bind:src='dataUrl' preload="auto"></audio>
       </md-app-toolbar>
 
       <md-app-drawer md-permanent="full">
@@ -39,15 +48,11 @@
           <md-input v-model="title" md-counter="30"></md-input>
         </md-field>
         <p v-for="item of items" v-bind:key="item.id">{{ item.text }}</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error quibusdam, non molestias et! Earum magnam, similique, quo recusandae placeat dicta asperiores modi sint ea repudiandae maxime? Quae non explicabo, neque.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error quibusdam, non molestias et! Earum magnam, similique, quo recusandae placeat dicta asperiores modi sint ea repudiandae maxime? Quae non explicabo, neque.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error quibusdam, non molestias et! Earum magnam, similique, quo recusandae placeat dicta asperiores modi sint ea repudiandae maxime? Quae non explicabo, neque.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error quibusdam, non molestias et! Earum magnam, similique, quo recusandae placeat dicta asperiores modi sint ea repudiandae maxime? Quae non explicabo, neque.</p>
         <md-field>
           <label>Textarea</label>
           <md-textarea v-model="text"></md-textarea>
         </md-field>
-        <md-button class="md-raised md-primary">add</md-button>
+        <md-button class="md-raised md-primary" v-on:click="addText">add</md-button>
       </md-app-content>
 
     </md-app>
@@ -84,7 +89,9 @@ export default {
       this.createSound();
           setTimeout(() => {
             this.getNote();
+            this.getSound();
           }, 1000);
+
     },
 
     createSound: function() {
@@ -115,7 +122,7 @@ export default {
           this.dataUrl = window.URL.createObjectURL(rblob);
           setTimeout(() => {
             this.togglePlay();
-          }, 100);
+          }, 1000);
         });
         this.getSoundInfo();
     },
@@ -188,6 +195,21 @@ export default {
           console.log('error saving account. e = ', e);
           //this.setMessage('There was an error adding your item');
         });
+      apiService.putSoundInfo({
+        title: this.title,
+        startTime: this.startTime,
+        endTime: this.endTime},
+        this.sound_id
+      )
+        .then(newsoundid => {
+          //this.items.push(newitem);
+          console.log(newsoundid)
+        })
+        .catch(e => {
+          console.log('error saving account. e = ', e);
+          //this.setMessage('There was an error adding your item');
+        });
+
     },
 
     togglePlay: function() {
