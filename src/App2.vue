@@ -79,7 +79,7 @@ export default {
       blob: null,
       gapSeconds: 3,
       text: '',
-      time: '',
+      submit_time: '',
       items: [],
     };
   },
@@ -125,9 +125,8 @@ export default {
     },
 
     getGapTime: function(item) {
-      console.log("item.time=",item.submit_time);
+      console.log("item.submit_time=",item.submit_time);
       console.log(this.startTime);
-      //var d1 = new Date(item.time);
       var d1 = new Date(item.submit_time);
       var d2 = new Date(this.startTime);
       this.gapSeconds =  (d1 - d2)/1000;
@@ -266,7 +265,7 @@ export default {
       console.log(this.text , new Date(), this.sound_id);
       apiService.createNote({
         text: this.text,
-        time: new Date()},
+        submit_time: new Date()},
         this.sound_id
       )
         .then(newitem => {

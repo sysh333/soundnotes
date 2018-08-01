@@ -112,13 +112,13 @@ router.post('/', async (req, res, next) => {
 router.post('/:id(\\d+)/note', async (req, res, next) => {
   let connection;
   const sound_id = req.params.id;
-  const { text, time } = req.body;
+  const { text, submit_time } = req.body;
   try {
     connection = await db.getConnection();
     const queryInsert = 'INSERT INTO note (text, submit_time , sound_id) VALUES (?, ?, ?)';
-    const [result] = await connection.query(queryInsert, [text, time, sound_id]);
+    const [result] = await connection.query(queryInsert, [text, submit_time, sound_id]);
 
-    res.json({ text, time, sound_id, id: result.insertId});
+    res.json({ text, submit_time, sound_id, id: result.insertId});
   } catch (err) {
     next(err);
     console.log('*** catch ***',err);

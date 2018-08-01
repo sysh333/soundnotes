@@ -36,10 +36,10 @@ export default {
   },
 
 
-  createNote: ({ text, time},sound_id) => {
+  createNote: ({ text, submit_time},sound_id) => {
     const options = {
       method: 'POST',
-      body: JSON.stringify({ text, time }),
+      body: JSON.stringify({ text, submit_time }),
       headers: {
         'content-type': 'application/json',
       },
