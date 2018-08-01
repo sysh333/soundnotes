@@ -72,7 +72,7 @@ export default {
       recordingData: [],
       dataUrl: '',
       sound_id: 1,
-      title: "test-title",
+      title: '',
       startTime: '',
       endTime: '',
       audioElement: null,
@@ -90,6 +90,7 @@ export default {
           setTimeout(() => {
             this.getNote();
             this.getSound();
+            this.ResetTitle();
           }, 1000);
     },
 
@@ -127,11 +128,16 @@ export default {
     getGapTime: function(item) {
       console.log("item.submit_time=",item.submit_time);
       console.log(this.startTime);
-      var d1 = new Date(item.submit_time);
-      var d2 = new Date(this.startTime);
-      this.gapSeconds =  (d1 - d2)/1000;
-      console.log(this.gapSeconds);
-      this.goPlay();
+      let d2 = new Date(item.submit_time);
+      let d1 = new Date(this.startTime);
+      let d3 = new Date(this.endTime);
+      if ((d2 - d1)>0 && (d3 - d2)>0 ){
+        this.gapSeconds =  (d2 - d1)/1000;
+        console.log(this.gapSeconds);
+        this.goPlay();
+      }else{
+        console.log("out of time");
+      }
     },
 
     getSoundRaw: function() {
@@ -280,11 +286,19 @@ export default {
     ResetMessage: function(message) {
       this.text = '';
     },
+    ResetTitle: function(message) {
+      this.title = '';
+    },
 
   },
   mounted: function() {
-    this.getSound();
-    this.getNote();
+    this.getSound().then(sound => {
+      apiService.getNote(sound.length)
+        .then(items => {
+          this.items = items;
+        });
+        // 本当はgetNote(sound.lenght)を書きたい。
+    });
   },
 };
 </script>
