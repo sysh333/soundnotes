@@ -26,7 +26,7 @@
             <md-icon>+</md-icon>
           </md-button>
           
-          <md-layout v-for="sound of sounds" v-bind:key="sound.id">
+          <md-layout v-for="sound of sounds" v-bind:key="sound.id" v-on:click="reviewSoundAndNote(sound)" >
               <md-card md-with-hover>
                 <md-ripple>
                   <md-card-header>
@@ -91,7 +91,23 @@ export default {
             this.getNote();
             this.getSound();
           }, 1000);
+    },
 
+    reviewSoundAndNote: function(sound) {
+      apiService.getNote(sound.id)
+        .then(items => {
+          this.items = items;
+        });
+        this.sound_id = sound.id
+        this.startTime = sound.start_time
+        console.log("here",sound.id)
+    },
+
+    getNote: function() {
+      apiService.getNote(this.sound_id)
+        .then(items => {
+          this.items = items;
+        });
     },
 
     createSound: function() {
@@ -109,9 +125,10 @@ export default {
     },
 
     getGapTime: function(item) {
-      console.log(item.time);
+      console.log("item.time=",item.submit_time);
       console.log(this.startTime);
-      var d1 = new Date(item.time);
+      //var d1 = new Date(item.time);
+      var d1 = new Date(item.submit_time);
       var d2 = new Date(this.startTime);
       this.gapSeconds =  (d1 - d2)/1000;
       console.log(this.gapSeconds);
@@ -243,12 +260,7 @@ export default {
 
 
 
-    getNote: function() {
-      apiService.getNote(this.sound_id)
-        .then(items => {
-          this.items = items;
-        });
-    },
+
     addText: function(evt) {
       evt.preventDefault();
       console.log(this.text , new Date(), this.sound_id);
