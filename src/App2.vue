@@ -12,7 +12,7 @@
 
       <md-button class="md-raised md-accent" v-on:click.stop.prevent="submitRecording">submit</md-button>
       <md-button class="md-raised md-accent" v-on:click.stop.prevent="getSoundRaw">play</md-button>
-      <audio id="audio" style="display:block; width: 100%" controls v-bind:src='dataUrl' v-if="dataUrl.length > 0" preload="auto"></audio>
+      <audio id="audio" controls v-bind:src='dataUrl' v-if="dataUrl.length > 0" preload="auto"></audio>
       </md-app-toolbar>
 
       <md-app-drawer md-permanent="full">
@@ -145,16 +145,6 @@ export default {
       }
     },
 
-    getSoundRaw: function() {
-      apiService.getSoundRaw(this.sound_id)
-        .then(rblob => {
-          this.dataUrl = window.URL.createObjectURL(rblob);
-          setTimeout(() => {
-            this.togglePlay();
-          }, 1000);
-        });
-        this.getSoundInfo();
-    },
     getSoundInfo: function() {
       apiService.getSoundInfo(this.sound_id)
         .then( items=> {
@@ -173,13 +163,15 @@ export default {
         });
     },
 
-    toggleRecording: function() {
+    toggleRecording: async function() {
         this.isRecording = !this.isRecording;
         if (this.isRecording) {
           this.recording();
         }
         else {
-          this.stoprecording();
+          await this.stoprecording();
+          await this.submitRecording();
+          await this.getSoundRaw();
         };
     },
 
@@ -203,17 +195,48 @@ export default {
       this.setStartTime();
     },
 
+    // stoprecording: function() {
+    //   var that = this;
+    //   this.audioRecorder.stop();
+    //   this.audioRecorder.ondataavailable = function(event) {
+    //     that.recordingData.push(event.data);
+    //   };
+    //   this.audioRecorder.onstop = function(event) {
+    //     console.log('Media recorder stopped');
+    //     that.blob = new Blob(that.recordingData, { type: 'audio/webm'});
+    //   };
+    //   this.setEndTime();
+    // },
+
     stoprecording: function() {
       var that = this;
-      this.audioRecorder.stop();
-      this.audioRecorder.ondataavailable = function(event) {
-        that.recordingData.push(event.data);
-      };
-      this.audioRecorder.onstop = function(event) {
-        console.log('Media recorder stopped');
-        that.blob = new Blob(that.recordingData, { type: 'audio/webm'});
-      };
-      this.setEndTime();
+      return new Promise((resolve, reject) => {
+        this.audioRecorder.stop();
+        this.audioRecorder.ondataavailable = function(event) {
+          that.recordingData.push(event.data);
+        };
+        this.audioRecorder.onstop = function(event) {
+          console.log('Media recorder stopped');
+          that.blob = new Blob(that.recordingData, { type: 'audio/webm'});
+          resolve();
+        };
+        this.setEndTime();
+      });
+    },
+
+
+    getSoundRaw: function() {
+      return new Promise((resolve, reject) => {
+        apiService.getSoundRaw(this.sound_id)
+          .then(rblob => {
+            this.dataUrl = window.URL.createObjectURL(rblob);
+            setTimeout(() => {
+             // this.togglePlay();
+              resolve();
+            }, 1000);
+          });
+          this.getSoundInfo();
+      });
     },
 
     setStartTime: function(){
@@ -264,13 +287,13 @@ export default {
 
     togglePlay: function() {
     var audioElement = document.getElementById("audio");
-      if (audioElement.paused === false) {
-        audioElement.pause();
-        console.log('Media play pause');
-     } else {
+    //   if (audioElement.paused === false) {
+    //     audioElement.pause();
+    //     console.log('Media play pause');
+    //  } else {
         audioElement.play();
         console.log('Media play ');
-     }
+    //  }
     },
 
     goPlay: function() {
