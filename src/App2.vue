@@ -174,38 +174,46 @@ export default {
     },
 
     toggleRecording: function() {
-        var that = this;
         this.isRecording = !this.isRecording;
-        
         if (this.isRecording) {
-            navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
-            navigator.getUserMedia({
-                    audio: true,
-                    video: false
-                }, function(stream) {
-                    that.stream = stream;
-                    that.audioRecorder = new MediaRecorder(stream, {
-                        mimeType: 'audio/webm',
-                        audioBitsPerSecond : 96000
-                    });
-                    that.audioRecorder.start();
-                    console.log('Media recorder started');
-                }, function(error) {
-                    alert(JSON.stringify(error));
-            });
-            this.setStartTime();
+          this.recording();
         }
         else {
-            this.audioRecorder.stop();
-            this.audioRecorder.ondataavailable = function(event) {
-              that.recordingData.push(event.data);
-            };
-            this.audioRecorder.onstop = function(event) {
-              console.log('Media recorder stopped');
-              that.blob = new Blob(that.recordingData, { type: 'audio/webm'});
-            };
-            this.setEndTime();
+          this.stoprecording();
         };
+    },
+
+    recording: function(){
+      var that = this;
+      navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+      navigator.getUserMedia({
+              audio: true,
+              video: false
+          }, function(stream) {
+              that.stream = stream;
+              that.audioRecorder = new MediaRecorder(stream, {
+                  mimeType: 'audio/webm',
+                  audioBitsPerSecond : 96000
+              });
+              that.audioRecorder.start();
+              console.log('Media recorder started');
+          }, function(error) {
+              alert(JSON.stringify(error));
+      });
+      this.setStartTime();
+    },
+
+    stoprecording: function() {
+      var that = this;
+      this.audioRecorder.stop();
+      this.audioRecorder.ondataavailable = function(event) {
+        that.recordingData.push(event.data);
+      };
+      this.audioRecorder.onstop = function(event) {
+        console.log('Media recorder stopped');
+        that.blob = new Blob(that.recordingData, { type: 'audio/webm'});
+      };
+      this.setEndTime();
     },
 
     setStartTime: function(){
@@ -218,6 +226,11 @@ export default {
     },
 
     submitRecording: function(evt) {
+      this.createSoundRaw();
+      this.putSoundInfo();
+    },
+
+    createSoundRaw: function(evt) {
       apiService.createSoundRaw({
         title: this.title,
         blob : this.blob,
@@ -231,9 +244,22 @@ export default {
         })
         .catch(e => {
           console.log('error saving account. e = ', e);
-          //this.setMessage('There was an error adding your item');
         });
-      this.putSoundInfo();
+    },
+    
+    putSoundInfo: function(){
+      return apiService.putSoundInfo({
+        title: this.title,
+        startTime: this.startTime,
+        endTime: this.endTime},
+        this.sound_id
+      )
+        .then(newsoundid => {
+          return newsoundid ;
+        })
+        .catch(e => {
+          console.log('error saving account. e = ', e);
+        });
     },
 
     togglePlay: function() {
@@ -281,22 +307,6 @@ export default {
     },
     ResetItems: function(message) {
       this.items = [];
-    },
-
-    putSoundInfo: function(){
-      return apiService.putSoundInfo({
-        title: this.title,
-        startTime: this.startTime,
-        endTime: this.endTime},
-        this.sound_id
-      )
-        .then(newsoundid => {
-          return newsoundid ;
-        })
-        .catch(e => {
-          console.log('error saving account. e = ', e);
-          //this.setMessage('There was an error adding your item');
-        });
     },
 
   },
