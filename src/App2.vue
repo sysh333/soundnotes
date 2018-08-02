@@ -3,7 +3,6 @@
     <md-app>
       <md-app-toolbar class="md-primary">
         <span class="md-title">Recording</span>
-      <!-- <md-button class="md-raised">Start Recording</md-button> -->
       <md-button class="md-raised" v-on:click.stop.prevent="toggleRecording">
         <i class="stop icon" v-show="isRecording"></i>
         <i class="record icon" v-show="!isRecording"></i>
@@ -13,7 +12,7 @@
 
       <md-button class="md-raised md-accent" v-on:click.stop.prevent="submitRecording">submit</md-button>
       <md-button class="md-raised md-accent" v-on:click.stop.prevent="getSoundRaw">play</md-button>
-      <audio id="audio" style="display:block; width: 100%" controls v-bind:src='dataUrl' preload="auto"></audio>
+      <audio id="audio" style="display:block; width: 100%" controls v-bind:src='dataUrl' v-if="dataUrl.length > 0" preload="auto"></audio>
       </md-app-toolbar>
 
       <md-app-drawer md-permanent="full">
@@ -45,7 +44,7 @@
       <md-app-content>
         <md-field>
           <label>Title</label>
-          <md-input v-model="title" md-counter="30"></md-input>
+          <md-input v-model="title" md-counter="30" v-on:change="changeTitle()"></md-input>
         </md-field>
         <p v-for="item of items" v-bind:key="item.id" v-on:click="getGapTime(item)" >{{ item.text }}</p>
         <md-field>
@@ -86,12 +85,19 @@ export default {
   methods: {
 
     createFirst: function(){
-      this.createSound();
-          setTimeout(() => {
-            this.getNote();
-            this.getSound();
-            this.ResetTitle();
-          }, 1000);
+      this.ResetItems();
+      this.ResetTitle();
+      this.createSound().then(x => {
+        this.getSound();
+      });
+    },
+
+    changeTitle: function() {
+      console.log("title sound id=" , this.sound_id);
+      console.log(this.title);
+      this.putSoundInfo().then(x => {
+        this.getSound();
+      });
     },
 
     reviewSoundAndNote: function(sound) {
@@ -112,12 +118,13 @@ export default {
     },
 
     createSound: function() {
-      apiService.createSound({
+      return apiService.createSound({
         title: this.title,
         startTime: new Date().toISOString()},
       )
         .then(newsoundid => {
           this.sound_id = newsoundid;
+          return newsoundid
           console.log(newsoundid)
         })
         .catch(e => {
@@ -161,10 +168,10 @@ export default {
     },
 
     getSound: function() {
-      apiService.getSound()
+      return apiService.getSound()
         .then(sounds => {
           this.sounds = sounds;
-                console.log(this.sounds);
+          return sounds
         });
     },
 
@@ -264,11 +271,9 @@ export default {
     },
 
 
-
-
     addText: function(evt) {
       evt.preventDefault();
-      console.log(this.text , new Date(), this.sound_id);
+      //console.log(this.text , new Date(), this.sound_id);
       apiService.createNote({
         text: this.text,
         submit_time: new Date()},
@@ -283,22 +288,41 @@ export default {
           this.setMessage('There was an error adding your item');
         });
     },
+
     ResetMessage: function(message) {
       this.text = '';
     },
     ResetTitle: function(message) {
       this.title = '';
     },
+    ResetItems: function(message) {
+      this.items = [];
+    },
+
+    putSoundInfo: function(){
+      return apiService.putSoundInfo({
+        title: this.title,
+        startTime: this.startTime,
+        endTime: this.endTime},
+        this.sound_id
+      )
+        .then(newsoundid => {
+          return newsoundid ;
+        })
+        .catch(e => {
+          console.log('error saving account. e = ', e);
+          //this.setMessage('There was an error adding your item');
+        });
+    },
 
   },
   mounted: function() {
-    this.getSound().then(sound => {
-      apiService.getNote(sound.length)
-        .then(items => {
-          this.items = items;
-        });
-        // 本当はgetNote(sound.lenght)を書きたい。
+    this.getSound().then(sounds => {
+      this.sound_id = sounds[0].id;
+      this.getNote();
+        // こっちは更新さ入れている。
     });
+    // ここではまだsoudnidは更新されていない
   },
 };
 </script>
