@@ -84,20 +84,18 @@ export default {
   },
   methods: {
 
-    createFirst: function(){
+    createFirst: async function(){
       this.ResetItems();
       this.ResetTitle();
-      this.createSound().then(x => {
-        this.getSound();
-      });
+      await this.createSound();
+      this.getSound();
     },
 
-    changeTitle: function() {
+    changeTitle: async function() {
       console.log("title sound id=" , this.sound_id);
       console.log(this.title);
-      this.putSoundInfo().then(x => {
-        this.getSound();
-      });
+      await this.putSoundInfo();
+      this.getSound();
     },
 
     reviewSoundAndNote: function(sound) {
@@ -235,21 +233,7 @@ export default {
           console.log('error saving account. e = ', e);
           //this.setMessage('There was an error adding your item');
         });
-      apiService.putSoundInfo({
-        title: this.title,
-        startTime: this.startTime,
-        endTime: this.endTime},
-        this.sound_id
-      )
-        .then(newsoundid => {
-          //this.items.push(newitem);
-          console.log(newsoundid)
-        })
-        .catch(e => {
-          console.log('error saving account. e = ', e);
-          //this.setMessage('There was an error adding your item');
-        });
-
+      this.putSoundInfo();
     },
 
     togglePlay: function() {
