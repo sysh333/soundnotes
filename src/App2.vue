@@ -4,8 +4,8 @@
       <md-app-toolbar class="md-primary">
         <span class="md-title">Recording</span>
       <md-button class="md-raised" v-on:click.stop.prevent="toggleRecording">
-        <i class="stop icon" v-show="isRecording"></i>
-        <i class="record icon" v-show="!isRecording"></i>
+        <i class="md-accent" v-show="isRecording"></i>
+        <i class="md-primary" v-show="!isRecording"></i>
         <span v-show="!isRecording">Start recording</span>
         <span v-show="isRecording">End recording</span>
       </md-button>
