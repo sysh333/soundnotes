@@ -172,4 +172,22 @@ router.put('/:id(\\d+)/', async (req, res, next) => {
   }
 });
 
+
+router.delete('/:id(\\d+)/', async (req, res, next) => {
+  let connection;
+  const id = req.params.id;
+  try {
+    connection = await db.getConnection();
+    const queryInsert = 'DELETE FROM sound where id = ?';
+    const [result] = await connection.query(queryInsert, [id]);
+    res.json(result);
+  } catch (err) {
+    next(err);
+  } finally {
+    if (connection) {
+      connection.close();
+    }
+  }
+});
+
 module.exports = router;

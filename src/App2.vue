@@ -25,7 +25,7 @@
             <md-icon>+</md-icon>
           </md-button>
           
-          <md-layout v-for="sound of sounds" v-bind:key="sound.id" v-on:click="reviewSoundAndNote(sound)" >
+          <md-layout  v-for="(sound, index) of sounds" v-bind:key="sound.id" v-on:click="reviewSoundAndNote(sound)" >
               <md-card md-with-hover>
                 <md-ripple>
                   <md-card-header>
@@ -33,7 +33,7 @@
                     <div class="md-subhead">{{sound.start_time}}</div>
                   </md-card-header>
                   <md-card-actions>
-                    <md-button>Delete</md-button>
+                    <md-button v-on:click.stop="deleteSoundMoveNote(sound, index)">Delete</md-button>
                   </md-card-actions>
                 </md-ripple>
               </md-card>
@@ -150,9 +150,6 @@ export default {
       apiService.getSoundInfo(this.sound_id)
         .then( items=> {
           const { title, startTime, endTime} = items;
-          console.log(title);
-          console.log(startTime);
-          console.log(endTime);
         });
     },
 
@@ -196,19 +193,6 @@ export default {
       this.setStartTime();
     },
 
-    // stoprecording: function() {
-    //   var that = this;
-    //   this.audioRecorder.stop();
-    //   this.audioRecorder.ondataavailable = function(event) {
-    //     that.recordingData.push(event.data);
-    //   };
-    //   this.audioRecorder.onstop = function(event) {
-    //     console.log('Media recorder stopped');
-    //     that.blob = new Blob(that.recordingData, { type: 'audio/webm'});
-    //   };
-    //   this.setEndTime();
-    // },
-
     stoprecording: function() {
       var that = this;
       return new Promise((resolve, reject) => {
@@ -231,10 +215,6 @@ export default {
         apiService.getSoundRaw(this.sound_id)
           .then(rblob => {
             this.dataUrl = window.URL.createObjectURL(rblob);
-            // setTimeout(() => {
-            //  // this.togglePlay();
-            //   resolve();
-            // }, 1000);
           });
           this.getSoundInfo();
       });
@@ -286,17 +266,6 @@ export default {
         });
     },
 
-    // togglePlay: function() {
-    // var audioElement = document.getElementById("audio");
-    // //   if (audioElement.paused === false) {
-    // //     audioElement.pause();
-    // //     console.log('Media play pause');
-    // //  } else {
-    //     audioElement.play();
-    //     console.log('Media play ');
-    // //  }
-    // },
-
     goPlay: function() {
     var audioElement = document.getElementById("audio");
         audioElement.currentTime = this.gapSeconds ;
@@ -331,6 +300,21 @@ export default {
     },
     ResetItems: function(message) {
       this.items = [];
+    },
+
+    deleteSoundMoveNote:function(sound , index){
+      this.reviewSoundAndNote(this.sounds[index + 1]); //端の処理がまだ
+      this.deleteSound(sound);
+    },
+
+    deleteSound: function(sound) {
+      apiService.deleteSound(sound)
+        .then(() => {
+          this.getSound();
+        })
+        .catch(e => {
+          console.log('error deleting item. e = ', e);
+        });
     },
 
   },

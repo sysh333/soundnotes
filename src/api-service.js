@@ -103,4 +103,18 @@ export default {
       });
   },
 
+  deleteSound: (sound) => {
+    console.log('sound = ', sound);
+    const options = {
+      method: 'DELETE',
+    };
+    return fetch(`/api/sound/${sound.id}`, options)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Error in DELETE /api/sound");
+        }
+        return response.json();
+      });
+  },
+
 };
