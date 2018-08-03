@@ -10,8 +10,6 @@
         <span v-show="isRecording">End recording</span>
       </md-button>
 
-      <md-button class="md-raised md-accent" v-on:click.stop.prevent="submitRecording">submit</md-button>
-      <md-button class="md-raised md-accent" v-on:click.stop.prevent="getSoundRaw">play</md-button>
       <audio id="audio" controls v-bind:src='dataUrl' v-if="dataUrl.length > 0" preload="auto"></audio>
       </md-app-toolbar>
 
@@ -99,14 +97,13 @@ export default {
     },
 
     reviewSoundAndNote: function(sound) {
-      apiService.getNote(sound.id)
-        .then(items => {
-          this.items = items;
-        });
-        this.sound_id = sound.id
-        this.startTime = sound.start_time
-        this.title = sound.title
-        console.log("here",sound.id)
+        this.sound_id = sound.id;
+        this.startTime = sound.start_time;
+        this.title = sound.title;
+        this.getNote();
+        console.log("here",sound.id);
+        console.log("here",this.sound_id);
+        this.getSoundRaw();
     },
 
     getNote: function() {
@@ -214,7 +211,12 @@ export default {
       return new Promise((resolve, reject) => {
         apiService.getSoundRaw(this.sound_id)
           .then(rblob => {
-            this.dataUrl = window.URL.createObjectURL(rblob);
+            console.log("rblob=", rblob);
+            if (rblob.size > 0){
+              this.dataUrl = window.URL.createObjectURL(rblob);
+            }else{
+              this.dataUrl = ""
+            }
           });
           this.getSoundInfo();
       });
