@@ -105,6 +105,7 @@ export default {
         });
         this.sound_id = sound.id
         this.startTime = sound.start_time
+        this.title = sound.title
         console.log("here",sound.id)
     },
 
@@ -230,10 +231,10 @@ export default {
         apiService.getSoundRaw(this.sound_id)
           .then(rblob => {
             this.dataUrl = window.URL.createObjectURL(rblob);
-            setTimeout(() => {
-             // this.togglePlay();
-              resolve();
-            }, 1000);
+            // setTimeout(() => {
+            //  // this.togglePlay();
+            //   resolve();
+            // }, 1000);
           });
           this.getSoundInfo();
       });
@@ -285,16 +286,16 @@ export default {
         });
     },
 
-    togglePlay: function() {
-    var audioElement = document.getElementById("audio");
-    //   if (audioElement.paused === false) {
-    //     audioElement.pause();
-    //     console.log('Media play pause');
-    //  } else {
-        audioElement.play();
-        console.log('Media play ');
-    //  }
-    },
+    // togglePlay: function() {
+    // var audioElement = document.getElementById("audio");
+    // //   if (audioElement.paused === false) {
+    // //     audioElement.pause();
+    // //     console.log('Media play pause');
+    // //  } else {
+    //     audioElement.play();
+    //     console.log('Media play ');
+    // //  }
+    // },
 
     goPlay: function() {
     var audioElement = document.getElementById("audio");
@@ -336,6 +337,7 @@ export default {
   mounted: function() {
     this.getSound().then(sounds => {
       this.sound_id = sounds[0].id;
+      this.title = sounds[0].title
       this.getNote();
         // こっちは更新さ入れている。
     });
