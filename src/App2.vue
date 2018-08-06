@@ -2,10 +2,8 @@
   <div class="page-container">
     <md-app>
       <md-app-toolbar class="md-primary">
-        <span class="md-title">Recording</span>
-      <md-button class="md-raised" v-on:click.stop.prevent="toggleRecording">
-        <i class="md-accent" v-show="isRecording"></i>
-        <i class="md-primary" v-show="!isRecording"></i>
+        <span class="md-title"></span>
+      <md-button class="md-raised" v-bind:disabled="(this.dataUrl.length > 0)" v-on:click.stop.prevent="toggleRecording">
         <span v-show="!isRecording">Start recording</span>
         <span v-show="isRecording">End recording</span>
       </md-button>
@@ -159,11 +157,13 @@ export default {
     },
 
     toggleRecording: async function() {
-        this.isRecording = !this.isRecording;
-        if (this.isRecording) {
+         if (!this.isRecording) {
           this.recording();
+          console.log("1回目 rec")
+          this.isRecording = !this.isRecording;
         }
         else {
+          console.log("1回目 stop")
           await this.stoprecording();
           await this.submitRecording();
           await this.getSoundRaw();
@@ -350,5 +350,6 @@ export default {
     display: inline-block;
     vertical-align: top;
   }
+
 
 </style>
