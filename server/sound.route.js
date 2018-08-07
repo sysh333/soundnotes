@@ -18,7 +18,7 @@ router.get('/', async (req, res, next) => {
   let connection;
   try {
     connection = await db.getConnection();
-    const [rows] = await connection.query('select id, title, start_time from `sound` ORDER BY id DESC');
+    const [rows] = await connection.query('select id, title, start_time, end_time from `sound` ORDER BY id DESC');
     res.json(rows);
     //console.log(rows);
   } catch (err) {
@@ -134,25 +134,6 @@ router.post('/:id(\\d+)/raw', upload.single('recording'), function(req, res) {
   console.log("multer sucsess");
 });
 
-
-// router.post('/', async (req, res, next) => { 
-//   let connection;
-//   try {
-//     connection = await db.getConnection();
-//     const { title, startTime, endTime} = req.body; //  <----あとで　endtime　を消す！！
-//     const queryInsert = 'INSERT INTO sound (title, start_time , end_time) VALUES (?, ?, ?)';
-//     const [result] = await connection.query(queryInsert, [title, startTime, endTime]);
-//     res.json(result.insertId);
-//   } catch (err) {
-//     next(err);
-//     console.log('*** catch ***',err); 
-//   } finally {
-//     if (connection) {
-//       connection.close();
-//     }
-//   }
-// });
-
 router.put('/:id(\\d+)/', async (req, res, next) => {
   let connection;
   const sound_id = req.params.id;
@@ -188,6 +169,15 @@ router.delete('/:id(\\d+)/', async (req, res, next) => {
       connection.close();
     }
   }
+  var fs = require('fs');
+  fs.unlink(`./uploads/${id}.webm`, function (err) {
+      if (err) {
+          console.error(err);
+      }
+      else {
+          console.log('finished!!');
+      }
+  });
 });
 
 module.exports = router;

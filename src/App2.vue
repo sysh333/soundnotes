@@ -21,7 +21,7 @@
             <md-icon>+</md-icon>
           </md-button>
           
-          <md-layout  v-for="(sound, index) of sounds" v-bind:key="sound.id" v-on:click="reviewSoundAndNote(sound)" >
+          <div v-for="(sound, index) of sounds" v-bind:key="sound.id" v-on:click="reviewSoundAndNote(sound)" >
               <md-card md-with-hover>
                 <md-ripple>
                   <md-card-header>
@@ -33,7 +33,7 @@
                   </md-card-actions>
                 </md-ripple>
               </md-card>
-            </md-layout>
+            </div>
         </md-list>
       </md-app-drawer>
 
@@ -42,7 +42,9 @@
           <label>Title</label>
           <md-input v-model="title" md-counter="30" v-on:change="changeTitle()"></md-input>
         </md-field>
-        <p v-for="item of items" v-bind:key="item.id" v-on:click="getGapTime(item)" >{{ item.text }}</p>
+        <md-field md-inline v-for="item of items" v-bind:key="item.id"  >
+          <md-input v-model="item.text" v-on:dblclick="getGapTime(item)" ></md-input>
+        </md-field>
         <md-field>
           <label>Textarea</label>
           <md-textarea v-model="text"></md-textarea>
@@ -81,8 +83,9 @@ export default {
   methods: {
 
     createFirst: async function(){
-      this.ResetItems();
-      this.ResetTitle();
+      this.items = [];
+      this.title = '';
+      this.dataUrl = '';
       await this.createSound();
       this.getSound();
     },
@@ -97,6 +100,7 @@ export default {
     reviewSoundAndNote: function(sound) {
         this.sound_id = sound.id;
         this.startTime = sound.start_time;
+        this.endTime = sound.end_time;
         this.title = sound.title;
         this.getNote();
         console.log("here",sound.id);
@@ -137,6 +141,9 @@ export default {
         console.log(this.gapSeconds);
         this.goPlay();
       }else{
+        console.log("submit_time", item.submit_time);
+        console.log("startTime",this.startTime);
+        console.log("endTime",this.endTime);
         console.log("out of time");
       }
     },
@@ -286,22 +293,12 @@ export default {
       )
         .then(newitem => {
           this.items.push(newitem);
-          this.ResetMessage();
+          this.text = '';
         })
         .catch(e => {
           console.log('error saving account. e = ', e);
           this.setMessage('There was an error adding your item');
         });
-    },
-
-    ResetMessage: function(message) {
-      this.text = '';
-    },
-    ResetTitle: function(message) {
-      this.title = '';
-    },
-    ResetItems: function(message) {
-      this.items = [];
     },
 
     deleteSoundMoveNote:function(sound , index){
@@ -334,6 +331,11 @@ export default {
 
 
 <style scoped>
+
+  .md-layout {
+    transition: .3s cubic-bezier(.25, .8, .25, 1);
+  }
+
   .md-app {
     max-height: 800px;
     border: 1px solid rgba(#000, .12);
