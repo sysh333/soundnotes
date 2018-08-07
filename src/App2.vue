@@ -68,7 +68,7 @@ export default {
       audioRecorder: null,
       recordingData: [],
       dataUrl: '',
-      sound_id: 1,
+      soundID: 1,
       title: '',
       startTime: '',
       endTime: '',
@@ -76,7 +76,7 @@ export default {
       blob: null,
       gapSeconds: 3,
       text: '',
-      submit_time: '',
+      submitTime: '',
       items: [],
     };
   },
@@ -91,25 +91,25 @@ export default {
     },
 
     changeTitle: async function() {
-      console.log("title sound id=" , this.sound_id);
+      console.log("title sound id=" , this.soundID);
       console.log(this.title);
       await this.putSoundInfo();
       this.getSound();
     },
 
     reviewSoundAndNote: function(sound) {
-        this.sound_id = sound.id;
+        this.soundID = sound.id;
         this.startTime = sound.start_time;
         this.endTime = sound.end_time;
         this.title = sound.title;
         this.getNote();
         console.log("here",sound.id);
-        console.log("here",this.sound_id);
+        console.log("here",this.soundID);
         this.getSoundRaw();
     },
 
     getNote: function() {
-      apiService.getNote(this.sound_id)
+      apiService.getNote(this.soundID)
         .then(items => {
           this.items = items;
         });
@@ -121,7 +121,7 @@ export default {
         startTime: new Date().toISOString()},
       )
         .then(newsoundid => {
-          this.sound_id = newsoundid;
+          this.soundID = newsoundid;
           return newsoundid
           console.log(newsoundid)
         })
@@ -141,7 +141,7 @@ export default {
         console.log(this.gapSeconds);
         this.goPlay();
       }else{
-        console.log("submit_time", item.submit_time);
+        console.log("submitTime", item.submit_time);
         console.log("startTime",this.startTime);
         console.log("endTime",this.endTime);
         console.log("out of time");
@@ -149,7 +149,7 @@ export default {
     },
 
     getSoundInfo: function() {
-      apiService.getSoundInfo(this.sound_id)
+      apiService.getSoundInfo(this.soundID)
         .then( items=> {
           const { title, startTime, endTime} = items;
         });
@@ -216,7 +216,7 @@ export default {
 
     getSoundRaw: function() {
       return new Promise((resolve, reject) => {
-        apiService.getSoundRaw(this.sound_id)
+        apiService.getSoundRaw(this.soundID)
           .then(rblob => {
             console.log("rblob=", rblob);
             if (rblob.size > 0){
@@ -249,7 +249,7 @@ export default {
         blob : this.blob,
         startTime: this.startTime,
         endTime: this.endTime},
-        this.sound_id
+        this.soundID
       )
         .then(newsoundid => {
           //this.items.push(newitem);
@@ -265,7 +265,7 @@ export default {
         title: this.title,
         startTime: this.startTime,
         endTime: this.endTime},
-        this.sound_id
+        this.soundID
       )
         .then(newsoundid => {
           return newsoundid ;
@@ -288,8 +288,8 @@ export default {
       //console.log(this.text , new Date(), this.sound_id);
       apiService.createNote({
         text: this.text,
-        submit_time: new Date()},
-        this.sound_id
+        submitTime: new Date()},
+        this.soundID
       )
         .then(newitem => {
           this.items.push(newitem);
@@ -319,7 +319,7 @@ export default {
   },
   mounted: function() {
     this.getSound().then(sounds => {
-      this.sound_id = sounds[0].id;
+      this.soundID = sounds[0].id;
       this.title = sounds[0].title
       this.getNote();
         // こっちは更新さ入れている。
