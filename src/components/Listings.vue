@@ -26,6 +26,7 @@
     <button class="button green-button" v-on:click.stop.prevent="goPlay">
       <i class="send icon"></i> go to
     </button>
+    <md-button class="md-raised md-primary">Sample</md-button>
     <audio id="audio" controls v-bind:src='dataUrl' preload="auto"></audio>
   </div>
 </template>
