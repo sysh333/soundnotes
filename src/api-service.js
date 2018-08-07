@@ -1,10 +1,10 @@
 export default {
-  
+
   getSound: () => {
     const options = {
       method: 'GET',
     };
-    return fetch(`/api/sound`, options)
+    return fetch('/api/sound', options)
       .then(response => response.json());
   },
 
@@ -20,7 +20,7 @@ export default {
     const options = {
       method: 'GET',
       headers: {
-        'content-type': 'audio/webm'
+        'content-type': 'audio/webm',
       },
     };
     return fetch(`/api/sound/${sound_id}/raw`, options)
@@ -31,12 +31,12 @@ export default {
     const options = {
       method: 'GET',
     };
-    return fetch(`/api/sound/${sound_id}`, options) 
+    return fetch(`/api/sound/${sound_id}`, options)
       .then(response => response.json());
   },
 
 
-  createNote: ({ text, submit_time},sound_id) => {
+  createNote: ({ text, submit_time }, sound_id) => {
     const options = {
       method: 'POST',
       body: JSON.stringify({ text, submit_time }),
@@ -53,8 +53,8 @@ export default {
       });
   },
 
-  createSoundRaw: ({ blob },sound_id) => {
-    var formData = new FormData();
+  createSoundRaw: ({ blob }, sound_id) => {
+    const formData = new FormData();
     formData.append('recording', blob, `${sound_id}.webm`); // <---- add filename formData.append('recording', blob, `$(sound_id)_file`);
     const options = {
       method: 'POST',
@@ -63,13 +63,13 @@ export default {
     return fetch(`/api/sound/${sound_id}/raw`, options)
       .then((response) => {
         if (!response.ok) {
-          throw new Error("Error in POST /api/sound");
+          throw new Error('Error in POST /api/sound');
         }
         return response.json();
       });
   },
 
-  createSound: ({ title,startTime}) => {
+  createSound: ({ title, startTime }) => {
     const options = {
       method: 'POST',
       body: JSON.stringify({ title, startTime }),
@@ -77,16 +77,16 @@ export default {
         'content-type': 'application/json',
       },
     };
-    return fetch(`/api/sound`, options)
+    return fetch('/api/sound', options)
       .then((response) => {
         if (!response.ok) {
-          throw new Error("Error in POST /api/sound");
+          throw new Error('Error in POST /api/sound');
         }
         return response.json();
       });
   },
 
-  putSoundInfo: ({ title,startTime,endTime},sound_id) => {
+  putSoundInfo: ({ title, startTime, endTime }, sound_id) => {
     const options = {
       method: 'PUT',
       body: JSON.stringify({ title, startTime, endTime }),
@@ -97,21 +97,20 @@ export default {
     return fetch(`/api/sound/${sound_id}`, options)
       .then((response) => {
         if (!response.ok) {
-          throw new Error("Error in PUT /api/sound");
+          throw new Error('Error in PUT /api/sound');
         }
         return response.json();
       });
   },
 
   deleteSound: (sound) => {
-    console.log('sound = ', sound);
     const options = {
       method: 'DELETE',
     };
     return fetch(`/api/sound/${sound.id}`, options)
       .then((response) => {
         if (!response.ok) {
-          throw new Error("Error in DELETE /api/sound");
+          throw new Error('Error in DELETE /api/sound');
         }
         return response.json();
       });
