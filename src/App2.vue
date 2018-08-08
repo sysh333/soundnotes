@@ -2,13 +2,18 @@
   <div class="page-container">
     <md-app>
       <md-app-toolbar class="md-primary">
-        <span class="md-title"></span>
+
+        <md-field class="md-title">
+          <label>Title</label>
+          <md-input v-model="title" v-on:change="changeTitle()"></md-input>
+        </md-field>
+
       <md-button class="md-raised" v-bind:disabled="(this.dataUrl.length > 0)" v-on:click.stop.prevent="toggleRecording">
         <span v-show="!isRecording">Start recording</span>
         <span v-show="isRecording">End recording</span>
       </md-button>
 
-      <audio id="audio" controls v-bind:src='dataUrl' v-if="dataUrl.length > 0" preload="auto"></audio>
+      <audio id="audio" style="padding-bottom: 60px;width: 500px;" controls v-bind:src='dataUrl' v-if="dataUrl.length > 0" preload="auto"></audio>
       </md-app-toolbar>
 
       <md-app-drawer md-permanent="full">
@@ -38,10 +43,7 @@
       </md-app-drawer>
 
       <md-app-content>
-        <md-field>
-          <label>Title</label>
-          <md-input v-model="title" md-counter="30" v-on:change="changeTitle()"></md-input>
-        </md-field>
+
         <md-field md-inline v-for="item of items" v-bind:key="item.id"  >
           <md-input v-model="item.text" v-on:dblclick="getGapTime(item)" ></md-input>
         </md-field>
