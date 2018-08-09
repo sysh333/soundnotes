@@ -2,13 +2,18 @@
   <div class="page-container">
     <md-app>
       <md-app-toolbar class="md-primary">
-        <span class="md-title"></span>
+
+        <md-field class="md-title">
+          <label>Title</label>
+          <md-input v-model="title" v-on:change="changeTitle()"></md-input>
+        </md-field>
+
       <md-button class="md-raised" v-bind:disabled="(this.dataUrl.length > 0)" v-on:click.stop.prevent="toggleRecording">
         <span v-show="!isRecording">Start recording</span>
         <span v-show="isRecording">End recording</span>
       </md-button>
 
-      <audio id="audio" controls v-bind:src='dataUrl' v-if="dataUrl.length > 0" preload="auto"></audio>
+      <audio id="audio" style="padding-bottom: 60px;width: 500px;" controls v-bind:src='dataUrl' v-if="dataUrl.length > 0" preload="auto"></audio>
       </md-app-toolbar>
 
       <md-app-drawer md-permanent="full">
@@ -22,7 +27,7 @@
           </md-button>
           
           <div v-for="(sound, index) of sounds" v-bind:key="sound.id" v-on:click="reviewSoundAndNote(sound)" >
-              <md-card md-with-hover>
+              <md-card v-bind:class="{'md-primary': sound.id == soundID }" md-with-hover >
                 <md-ripple>
                   <md-card-header>
                     <div class="md-title">{{sound.title}}</div>
@@ -38,10 +43,7 @@
       </md-app-drawer>
 
       <md-app-content>
-        <md-field>
-          <label>Title</label>
-          <md-input v-model="title" md-counter="30" v-on:change="changeTitle()"></md-input>
-        </md-field>
+
         <md-field md-inline v-for="item of items" v-bind:key="item.id"  >
           <md-input v-model="item.text" v-on:dblclick="getGapTime(item)" ></md-input>
         </md-field>
@@ -63,6 +65,7 @@ export default {
   name: 'App2',
   data() {
     return {
+      isclicked : true,
       sounds: [],
       isRecording: false,
       audioRecorder: null,
@@ -288,7 +291,7 @@ export default {
       //console.log(this.text , new Date(), this.sound_id);
       apiService.createNote({
         text: this.text,
-        submitTime: new Date()},
+        submitTime: new Date().toISOString()},
         this.soundID
       )
         .then(newitem => {
