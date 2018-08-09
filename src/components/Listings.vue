@@ -18,7 +18,7 @@
 
       <md-app-drawer md-permanent="full">
         <md-toolbar class="md-transparent" md-elevation="0">
-          Sound Listaaaa
+          {{this.userName}}
         </md-toolbar>
 
         <md-list>
@@ -81,6 +81,7 @@ export default {
       text: '',
       submitTime: '',
       items: [],
+      userName: firebase.auth().currentUser.email,
     };
   },
   methods: {
