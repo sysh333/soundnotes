@@ -27,7 +27,7 @@
           </md-button>
           
           <div v-for="(sound, index) of sounds" v-bind:key="sound.id" v-on:click="reviewSoundAndNote(sound)" >
-              <md-card md-with-hover>
+              <md-card v-bind:class="{'md-primary': sound.id == soundID }" md-with-hover >
                 <md-ripple>
                   <md-card-header>
                     <div class="md-title">{{sound.title}}</div>
@@ -65,6 +65,7 @@ export default {
   name: 'App2',
   data() {
     return {
+      isclicked : true,
       sounds: [],
       isRecording: false,
       audioRecorder: null,
@@ -290,7 +291,7 @@ export default {
       //console.log(this.text , new Date(), this.sound_id);
       apiService.createNote({
         text: this.text,
-        submitTime: new Date()},
+        submitTime: new Date().toISOString()},
         this.soundID
       )
         .then(newitem => {
