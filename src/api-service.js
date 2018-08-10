@@ -1,10 +1,10 @@
 export default {
 
-  getSound: () => {
+  getSound: (userID) => {
     const options = {
       method: 'GET',
     };
-    return fetch('/api/sound', options)
+    return fetch(`/api/sound/user/${userID}`, options)
       .then(response => response.json());
   },
 
@@ -36,10 +36,10 @@ export default {
   },
 
 
-  createNote: ({ text, submitTime }, soundID) => {
+  createNote: ({ text, submit_time }, soundID) => {
     const options = {
       method: 'POST',
-      body: JSON.stringify({ text, submitTime }),
+      body: JSON.stringify({ text, submit_time }),
       headers: {
         'content-type': 'application/json',
       },
@@ -69,10 +69,10 @@ export default {
       });
   },
 
-  createSound: ({ title, startTime }) => {
+  createSound: ({ title, startTime, userID }) => {
     const options = {
       method: 'POST',
-      body: JSON.stringify({ title, startTime }),
+      body: JSON.stringify({ title, startTime, userID }),
       headers: {
         'content-type': 'application/json',
       },
@@ -102,6 +102,25 @@ export default {
         return response.json();
       });
   },
+
+
+  putText: ({ text }, noteID) => {
+    const options = {
+      method: 'PUT',
+      body: JSON.stringify({ text }),
+      headers: {
+        'content-type': 'application/json',
+      },
+    };
+    return fetch(`/api/sound/note/${noteID}`, options)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Error in PUT /api/sound');
+        }
+        return response.json();
+      });
+  },
+
 
   deleteSound: (sound) => {
     const options = {

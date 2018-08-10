@@ -16,14 +16,16 @@ const upload = multer({ storage });
 const router = express.Router();
 
 
-router.get('/', async (req, res, next) => {
+router.get('/user/:id', async (req, res, next) => {
   let connection;
+  const userID = req.params.id;
+  console.log('get userID para =', userID);
   try {
     connection = await db.getConnection();
-    const [rows] = await connection.query('select id, title, start_time, end_time from `sound` ORDER BY id DESC');
+    const [rows] = await connection.query('select id, title, start_time, end_time from `sound` WHERE `user_ID` = ? ORDER BY id DESC', [userID]);
     res.json(rows);
   } catch (err) {
-    // console.log('*** catch ***', err);
+    console.log('*** catch ***', err);
     next(err);
   } finally {
     if (connection) {
@@ -41,7 +43,7 @@ router.get('/:id(\\d+)/note', async (req, res, next) => {
     const [rows] = await connection.query('select id, text, submit_time from `note` WHERE `sound_id` = ? ORDER BY submit_time', [soundID]);
     res.json(rows);
   } catch (err) {
-    // console.log('*** catch ***', err);
+    console.log('*** catch ***', err);
     next(err);
   } finally {
     if (connection) {
@@ -58,7 +60,7 @@ router.get('/:id(\\d+)/', async (req, res, next) => {
     const [rows] = await connection.query('select id, title, start_time, end_time from `sound` WHERE `id` = ?', [soundID]);
     res.json(rows);
   } catch (err) {
-    // console.log('*** catch ***', err);
+    console.log('*** catch ***', err);
     next(err);
   } finally {
     if (connection) {
@@ -73,7 +75,7 @@ router.get('/:id(\\d+)/raw', async (req, res, next) => {
   try {
     fs.readFile(`./uploads/${soundID}.webm`, (error, data) => {
       if (error) {
-        // console.log(error);
+        console.log(error);
       }
       res.set({
         'content-type': 'audio/webm',
@@ -81,7 +83,7 @@ router.get('/:id(\\d+)/raw', async (req, res, next) => {
       res.send(data);
     });
   } catch (err) {
-    // console.log('*** catch ***', err);
+    console.log('*** catch ***', err);
     next(err);
   } finally {
     if (connection) {
@@ -94,13 +96,13 @@ router.post('/', async (req, res, next) => {
   let connection;
   try {
     connection = await db.getConnection();
-    const { title, startTime } = req.body;
-    const queryInsert = 'INSERT INTO sound (title,start_time) VALUES (?,?)';
-    const [result] = await connection.query(queryInsert, [title, startTime]);
+    const { title, startTime, userID } = req.body;
+    const queryInsert = 'INSERT INTO sound (title,start_time,user_ID) VALUES (?,?,?)';
+    const [result] = await connection.query(queryInsert, [title, startTime, userID]);
     res.json(result.insertId);
   } catch (err) {
     next(err);
-    // console.log('*** catch ***', err);
+    console.log('*** catch ***', err);
   } finally {
     if (connection) {
       connection.close();
@@ -111,16 +113,16 @@ router.post('/', async (req, res, next) => {
 router.post('/:id(\\d+)/note', async (req, res, next) => {
   let connection;
   const soundID = req.params.id;
-  const { text, submitTime } = req.body;
+  const { text, submit_time } = req.body;
   try {
     connection = await db.getConnection();
     const queryInsert = 'INSERT INTO note (text, submit_time , sound_id) VALUES (?, ?, ?)';
-    const [result] = await connection.query(queryInsert, [text, submitTime, soundID]);
+    const [result] = await connection.query(queryInsert, [text, submit_time, soundID]);
 
-    res.json({ text, submitTime, soundID, id: result.insertId });
+    res.json({ text, submit_time, soundID, id: result.insertId });
   } catch (err) {
     next(err);
-    // console.log('*** catch ***', err);
+    console.log('*** catch ***', err);
   } finally {
     if (connection) {
       connection.close();
@@ -142,7 +144,27 @@ router.put('/:id(\\d+)/', async (req, res, next) => {
     res.json({ id: result.insertId });
   } catch (err) {
     next(err);
-    // console.log('*** catch ***', err);
+    console.log('*** catch ***', err);
+  } finally {
+    if (connection) {
+      connection.close();
+    }
+  }
+});
+
+
+router.put('/note/:id(\\d+)/', async (req, res, next) => {
+  let connection;
+  const noteID = req.params.id;
+  const { text } = req.body;
+  try {
+    connection = await db.getConnection();
+    const queryInsert = 'UPDATE note SET text = ? WHERE `id` = ?';
+    const [result] = await connection.query(queryInsert, [text, noteID]);
+    res.json({ id: result.insertId });
+  } catch (err) {
+    next(err);
+    console.log('*** catch ***', err);
   } finally {
     if (connection) {
       connection.close();

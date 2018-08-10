@@ -18,14 +18,14 @@
 
       <md-app-drawer md-permanent="full">
         <md-toolbar class="md-transparent" md-elevation="0">
-          {{this.userName}}
+          {{this.userID}}
         </md-toolbar>
 
         <md-list>
-          <md-button class="md-fab md-mini md-primary" v-on:click.stop.prevent="createFirst">
-            <md-icon>+</md-icon>
-          </md-button>
-          
+          <md-button v-on:click='signOut' class="md-raised">Sign out</md-button>
+          <hr color="blue">
+          <md-button class="md-raised" v-on:click.stop.prevent="createFirst">+New note</md-button>
+
           <div v-for="(sound, index) of sounds" v-bind:key="sound.id" v-on:click="reviewSoundAndNote(sound)" >
               <md-card v-bind:class="{'md-primary': sound.id == soundID }" md-with-hover >
                 <md-ripple>
@@ -45,7 +45,7 @@
       <md-app-content>
 
         <md-field md-inline v-for="item of items" v-bind:key="item.id"  >
-          <md-input v-model="item.text" v-on:dblclick="getGapTime(item)" ></md-input>
+          <md-input v-model="item.text" v-on:dblclick="getGapTime(item)" v-on:change="changeText(item)" ></md-input>
         </md-field>
         <md-field>
           <label>Textarea</label>
@@ -79,9 +79,9 @@ export default {
       blob: null,
       gapSeconds: 3,
       text: '',
-      submitTime: '',
+      submit_time: '',
       items: [],
-      userName: firebase.auth().currentUser.email,
+      userID: firebase.auth().currentUser.email,
     };
   },
   methods: {
@@ -90,6 +90,7 @@ export default {
       this.items = [];
       this.title = '';
       this.dataUrl = '';
+      this.isRecording = false ;
       await this.createSound();
       this.getSound();
     },
@@ -99,6 +100,13 @@ export default {
       console.log(this.title);
       await this.putSoundInfo();
       this.getSound();
+    },
+
+    changeText: async function(item) {
+      console.log("item.text=" , item.text);
+      console.log(item.id);
+      await this.putText(item);
+      this.getNote();
     },
 
     reviewSoundAndNote: function(sound) {
@@ -120,9 +128,12 @@ export default {
     },
 
     createSound: function() {
+      console.log("userID =",this.userID);
       return apiService.createSound({
         title: this.title,
-        startTime: new Date().toISOString()},
+        startTime: new Date().toISOString(),
+        userID: this.userID,        
+        }
       )
         .then(newsoundid => {
           this.soundID = newsoundid;
@@ -160,7 +171,7 @@ export default {
     },
 
     getSound: function() {
-      return apiService.getSound()
+      return apiService.getSound(this.userID)
         .then(sounds => {
           this.sounds = sounds;
           return sounds
@@ -279,6 +290,20 @@ export default {
         });
     },
 
+    putText: function(item){
+      return apiService.putText({
+        text: item.text,
+        },
+        item.id
+      )
+        .then(noteid => {
+          return noteid ;
+        })
+        .catch(e => {
+          console.log('error saving account. e = ', e);
+        });
+    },
+
     goPlay: function() {
     var audioElement = document.getElementById("audio");
         audioElement.currentTime = this.gapSeconds ;
@@ -292,7 +317,7 @@ export default {
       //console.log(this.text , new Date(), this.sound_id);
       apiService.createNote({
         text: this.text,
-        submitTime: new Date().toISOString()},
+        submit_time: new Date().toISOString()},
         this.soundID
       )
         .then(newitem => {
@@ -318,6 +343,11 @@ export default {
         .catch(e => {
           console.log('error deleting item. e = ', e);
         });
+    },
+    signOut: function () {
+      firebase.auth().signOut().then(() => {
+        this.$router.push('/signin')
+      })
     },
 
   },

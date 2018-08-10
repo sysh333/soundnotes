@@ -7,8 +7,6 @@ import Listing from './components/Listings';
 import Signup from './components/Signup';
 import Signin from './components/Signin';
 
-console.log('router =', firebase);
-
 Vue.use(Router);
 
 const router = new Router({

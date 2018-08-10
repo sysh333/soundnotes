@@ -10,3 +10,7 @@ INSERT INTO `note` (`text`, `submit_time`,`sound_id`) VALUES ('明日はうう�
 INSERT INTO `note` (`text`, `submit_time`,`sound_id`) VALUES ('昨日はいい天気','2016-01-01 00:01:00',3);
 INSERT INTO `note` (`text`, `submit_time`,`sound_id`) VALUES ('昨日はああ天気','2016-01-01 00:01:02',3);
 INSERT INTO `note` (`text`, `submit_time`,`sound_id`) VALUES ('昨日はうう天気','2016-01-01 00:01:03',3);
+
+INSERT INTO `note` (`text`, `submit_time`,`sound_id`) VALUES ('昨日はddd天気','2016-01-01 00:01:00',4);
+INSERT INTO `note` (`text`, `submit_time`,`sound_id`) VALUES ('昨日はfff天気','2016-01-01 00:01:02',4);
+INSERT INTO `note` (`text`, `submit_time`,`sound_id`) VALUES ('昨日はgggg天気','2016-01-01 00:01:03',4);
