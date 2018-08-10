@@ -62,7 +62,7 @@
 import apiService from "../api-service";
 
 export default {
-  name: 'App2',
+  name: 'App',
   data() {
     return {
       isclicked : true,

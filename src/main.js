@@ -5,10 +5,12 @@ import Vue from 'vue';
 import VueMaterial from 'vue-material';
 import 'vue-material/dist/vue-material.min.css';
 import 'vue-material/dist/theme/default.css';
-import firebase from 'firebase';
+import firebase from 'firebase/app';
+import 'firebase/auth';
+
+
 import App from './App';
 import router from './router';
-
 
 Vue.use(VueMaterial);
 
