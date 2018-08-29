@@ -1,35 +1,45 @@
 export default {
 
-  getSound: (userID) => {
+  getSound: (UID) => {
     const options = {
       method: 'GET',
+      headers: {
+        'user-token': UID,
+      },
     };
-    return fetch(`/api/sound/user/${userID}`, options)
+    return fetch('/api/sound/', options)
       .then(response => response.json());
   },
 
-  getNote: (soundID) => {
+  getNote: ({ soundID, UID }) => {
     const options = {
       method: 'GET',
+      headers: {
+        'user-token': UID,
+      },
     };
     return fetch(`/api/sound/${soundID}/note`, options)
       .then(response => response.json());
   },
 
-  getSoundRaw: (soundID) => {
+  getSoundRaw: ({ soundID, UID }) => {
     const options = {
       method: 'GET',
       headers: {
         'content-type': 'audio/webm',
+        'user-token': UID,
       },
     };
     return fetch(`/api/sound/${soundID}/raw`, options)
       .then(response => response.blob());
   },
 
-  getSoundInfo: (soundID) => {
+  getSoundInfo: ({ soundID, UID }) => {
     const options = {
       method: 'GET',
+      headers: {
+        'user-token': UID,
+      },
     };
     return fetch(`/api/sound/${soundID}`, options)
       .then(response => response.json());
@@ -42,6 +52,7 @@ export default {
       body: JSON.stringify({ text, submit_time }),
       headers: {
         'content-type': 'application/json',
+        //'x-user-token':
       },
     };
     return fetch(`/api/sound/${soundID}/note`, options)
@@ -69,12 +80,13 @@ export default {
       });
   },
 
-  createSound: ({ title, startTime, userID }) => {
+  createSound: ({ title, startTime, UID }) => {
     const options = {
       method: 'POST',
-      body: JSON.stringify({ title, startTime, userID }),
+      body: JSON.stringify({ title, startTime, UID }),
       headers: {
         'content-type': 'application/json',
+        'user-token': UID,
       },
     };
     return fetch('/api/sound', options)

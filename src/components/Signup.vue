@@ -11,7 +11,7 @@
 </template>
 
 <script>
-
+import firebase from 'firebase/app';
 export default {
   name: 'Signup',
   data () {

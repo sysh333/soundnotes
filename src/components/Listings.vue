@@ -12,8 +12,7 @@
         <span v-show="!isRecording">Start recording</span>
         <span v-show="isRecording">End recording</span>
       </md-button>
-
-      <audio id="audio" style="padding-bottom: 60px;width: 500px;" controls v-bind:src='dataUrl' v-if="dataUrl.length > 0" preload="auto"></audio>
+      <audio id="audio" class="md-image" controls v-bind:src='dataUrl' v-if="dataUrl.length > 0" preload="auto"></audio>
       </md-app-toolbar>
 
       <md-app-drawer md-permanent="full">
@@ -60,6 +59,7 @@
 
 <script>
 import apiService from "../api-service";
+import firebase from 'firebase/app';
 
 export default {
   name: 'App',
@@ -82,6 +82,7 @@ export default {
       submit_time: '',
       items: [],
       userID: firebase.auth().currentUser.email,
+      UID: firebase.auth().currentUser.uid,
     };
   },
   methods: {
@@ -117,22 +118,26 @@ export default {
         this.getNote();
         console.log("here",sound.id);
         console.log("here",this.soundID);
+        console.log("here",this.UID);
         this.getSoundRaw();
     },
 
     getNote: function() {
-      apiService.getNote(this.soundID)
+      apiService.getNote({
+        soundID: this.soundID,
+        UID: this.UID,   
+        })
         .then(items => {
           this.items = items;
         });
     },
 
     createSound: function() {
-      console.log("userID =",this.userID);
+      console.log("UID =",this.UID);
       return apiService.createSound({
         title: this.title,
         startTime: new Date().toISOString(),
-        userID: this.userID,        
+        UID: this.UID,        
         }
       )
         .then(newsoundid => {
@@ -164,14 +169,17 @@ export default {
     },
 
     getSoundInfo: function() {
-      apiService.getSoundInfo(this.soundID)
+      apiService.getSoundInfo({
+        soundID: this.soundID,
+        UID: this.UID,
+      })
         .then( items=> {
           const { title, startTime, endTime} = items;
         });
     },
 
     getSound: function() {
-      return apiService.getSound(this.userID)
+      return apiService.getSound(this.UID)
         .then(sounds => {
           this.sounds = sounds;
           return sounds
@@ -230,8 +238,12 @@ export default {
 
 
     getSoundRaw: function() {
+      console.log("getSoundRawUID =",this.UID);
       return new Promise((resolve, reject) => {
-        apiService.getSoundRaw(this.soundID)
+        apiService.getSoundRaw({
+          soundID: this.soundID,
+          UID: this.UID,
+        })
           .then(rblob => {
             console.log("rblob=", rblob);
             if (rblob.size > 0){
