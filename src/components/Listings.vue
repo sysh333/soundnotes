@@ -91,6 +91,8 @@ export default {
       this.items = [];
       this.title = '';
       this.dataUrl = '';
+      this.startTime= '';
+      this.endTime= '';
       this.isRecording = false ;
       await this.createSound();
       this.getSound();
@@ -116,9 +118,11 @@ export default {
         this.endTime = sound.end_time;
         this.title = sound.title;
         this.getNote();
+        console.log("here",sound);
         console.log("here",sound.id);
         console.log("here",this.soundID);
-        console.log("here",this.UID);
+        console.log("here sound.start_time",sound.start_time);
+        console.log("here sound.start_time",sound.end_time);
         this.getSoundRaw();
     },
 
@@ -152,7 +156,8 @@ export default {
 
     getGapTime: function(item) {
       console.log("item.submit_time=",item.submit_time);
-      console.log(this.startTime);
+      console.log("startTime",this.startTime);
+      console.log("endTime",this.endTime);
       let d2 = new Date(item.submit_time);
       let d1 = new Date(this.startTime);
       let d3 = new Date(this.endTime);
@@ -366,7 +371,9 @@ export default {
   mounted: function() {
     this.getSound().then(sounds => {
       this.soundID = sounds[0].id;
-      this.title = sounds[0].title
+      this.title = sounds[0].title;
+      this.startTime = sounds[0].start_time;
+      this.endTime = sounds[0].end_time;
       this.getNote();
         // こっちは更新さ入れている。
     });
