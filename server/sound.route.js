@@ -24,6 +24,7 @@ router.get('/', async (req, res, next) => {
     connection = await db.getConnection();
     const [rows] = await connection.query('select id, title, start_time, end_time from `sound` WHERE `user_ID` = ? ORDER BY id DESC', [UID]);
     res.json(rows);
+    console.log('rows =', rows);
   } catch (err) {
     console.log('*** catch ***', err);
     next(err);

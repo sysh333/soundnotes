@@ -25,7 +25,7 @@
           <hr color="blue">
           <md-button class="md-raised" v-on:click.stop.prevent="createFirst">+New note</md-button>
 
-          <div v-for="(sound, index) of sounds" v-bind:key="sound.id" v-on:click="reviewSoundAndNote(sound)" >
+          <div v-for="(sound, index) of sounds" v-bind:key="sound.id" v-on:click="reviewSoundAndNote(sound, sounds)" >
               <md-card v-bind:class="{'md-primary': sound.id == soundID }" md-with-hover >
                 <md-ripple>
                   <md-card-header>
@@ -112,7 +112,7 @@ export default {
       this.getNote();
     },
 
-    reviewSoundAndNote: function(sound) {
+    reviewSoundAndNote: function(sound, sounds) {
         this.soundID = sound.id;
         this.startTime = sound.start_time;
         this.endTime = sound.end_time;
@@ -123,6 +123,7 @@ export default {
         console.log("here",this.soundID);
         console.log("here sound.start_time",sound.start_time);
         console.log("here sound.start_time",sound.end_time);
+        console.log("here",sounds);
         this.getSoundRaw();
     },
 
