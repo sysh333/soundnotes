@@ -141,7 +141,7 @@ export default {
       console.log("UID =",this.UID);
       return apiService.createSound({
         title: this.title,
-        startTime: new Date().toISOString(),
+        startTime: new Date().toISOString(), //this 
         UID: this.UID,        
         }
       )
@@ -181,6 +181,9 @@ export default {
       })
         .then( items=> {
           const { title, startTime, endTime} = items;
+          // this.title = title;  //hosi
+          // this.startTime = startTime;
+          // this.endTime = endTime;
         });
     },
 
@@ -200,9 +203,14 @@ export default {
         }
         else {
           console.log("1回目 stop")
-          await this.stoprecording();
-          await this.submitRecording();
-          await this.getSoundRaw();
+          await this.stoprecording();  //1 録音ストップ
+          await this.sleep1();
+          await this.submitRecording(); //2　スタートとエンドの時間もBDへ入れる
+          await this.sleep2();
+          await this.getSound();  //3　入れた後に、DBからとってきて　画面表示
+          await this.sleep3();
+          await this.getSoundRaw(); // 4　なま音表示
+
         };
     },
 
@@ -258,7 +266,7 @@ export default {
               this.dataUrl = ""
             }
           });
-          this.getSoundInfo();
+          //this.getSoundInfo();
       });
     },
 
@@ -271,13 +279,29 @@ export default {
       this.endTime = endTime.toISOString()
     },
 
-    submitRecording: function(evt) {
-      this.createSoundRaw();
-      this.putSoundInfo();
+    sleep1: function(){
+      setTimeout(() => {console.log('sleep1');}, 2000);
     },
 
+    sleep2: function(){
+      setTimeout(() => {console.log('sleep2');}, 1000);
+    },
+
+    sleep3: function(){
+      setTimeout(() => {console.log('sleep3');}, 500);
+    },
+
+    
+    submitRecording: function() {
+      return new Promise((resolve, reject) => {
+      this.createSoundRaw();
+      this.putSoundInfo();
+      console.log("submitRecording")
+      });
+    },      
+
     createSoundRaw: function(evt) {
-      apiService.createSoundRaw({
+      return apiService.createSoundRaw({
         title: this.title,
         blob : this.blob,
         startTime: this.startTime,
