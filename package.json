@@ -5,12 +5,12 @@
   "author": "TPA",
   "private": true,
   "scripts": {
-    "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
+    "dev": "NODE_ENV=development webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "start": "concurrently 'npm run dev' 'npm run dev --prefix server'",
     "unit": "jest --config test/unit/jest.conf.js --coverage",
     "test": "npm run unit",
     "lint": "eslint --ext .js,.vue src test/unit",
-    "build": "node build/build.js"
+    "build": "NODE_ENV=development node build/build.js"
   },
   "dependencies": {
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
@@ -19,6 +19,7 @@
     "mysql2": "^1.5.3",
     "vue": "^2.5.2",
     "vue-material": "^1.0.0-beta-10.2",
+    "vue-moment": "^4.0.0",
     "vue-router": "^3.0.1"
   },
   "devDependencies": {
