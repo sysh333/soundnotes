@@ -15,6 +15,7 @@ const upload = multer({ storage });
 
 const router = express.Router();
 
+router.get('/hello', (req, res) => res.send("Hello World!"));
 
 router.get('/', async (req, res, next) => {
   let connection;

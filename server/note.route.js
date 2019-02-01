@@ -3,6 +3,8 @@ const db = require('./connection');
 
 const router = express.Router();
 
+router.get('/hello', (req, res) => res.send("Hello World!"));
+
 router.get('/:id(\\d+)/note', async (req, res, next) => {
   let connection;
   const sound_id = req.params.id;
@@ -27,7 +29,7 @@ router.post('/', async (req, res, next) => {
   const sound_id = req.query.sound_id;
   const { text, time } = req.body;
   console.log(time);
-  
+
   try {
     connection = await db.getConnection();
 
