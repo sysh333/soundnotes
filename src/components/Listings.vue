@@ -290,11 +290,7 @@ export default {
     },
     
     submitRecording: function() {
-      return new Promise((resolve, reject) => {
-      this.createSoundRaw();
-      this.putSoundInfo();
-      console.log("submitRecording")
-      });
+      return Promise.all([this.createSoundRaw(), this.putSoundInfo()]);
     },      
 
     createSoundRaw: function(evt) {
@@ -308,9 +304,6 @@ export default {
         .then(newsoundid => {
           //this.items.push(newitem);
           console.log(newsoundid)
-        })
-        .catch(e => {
-          console.log('error saving account. e = ', e);
         });
     },
     
@@ -323,9 +316,6 @@ export default {
       )
         .then(newsoundid => {
           return newsoundid ;
-        })
-        .catch(e => {
-          console.log('error saving account. e = ', e);
         });
     },
 
