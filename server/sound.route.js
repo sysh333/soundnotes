@@ -146,7 +146,15 @@ router.post('/:id(\\d+)/note', async (req, res, next) => {
 });
 
 
-router.post('/:id(\\d+)/raw', upload.single('recording'));
+router.post('/:id(\\d+)/raw', upload.single('recording'),(req, res) => {
+  const file = req.file
+  const meta = req.body
+  // デッバグのため、アップしたファイルの名前を表示する
+  console.log(file, meta)
+  // アップ完了したら200ステータスを送る
+  res.status(200).json({msg: 'アップロード完了'})
+});
+
 
 router.put('/:id(\\d+)/', async (req, res, next) => {
   let connection;

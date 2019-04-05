@@ -25,7 +25,7 @@
           <hr color="blue">
           <md-button class="md-raised" v-on:click.stop.prevent="createFirst">+New note</md-button>
 
-          <div v-for="(sound, index) of sounds" v-bind:key="sound.id" v-on:click="reviewSoundAndNote(sound)" >
+          <div v-for="(sound, index) of sounds" v-bind:key="sound.id" v-on:click="reviewSoundAndNote(sound, sounds)" >
               <md-card v-bind:class="{'md-primary': sound.id == soundID }" md-with-hover >
                 <md-ripple>
                   <md-card-header>
@@ -112,7 +112,7 @@ export default {
       this.getNote();
     },
 
-    reviewSoundAndNote: function(sound) {
+    reviewSoundAndNote: function(sound, sounds) {
         this.soundID = sound.id;
         this.startTime = sound.start_time;
         this.endTime = sound.end_time;
@@ -123,6 +123,7 @@ export default {
         console.log("here",this.soundID);
         console.log("here sound.start_time",sound.start_time);
         console.log("here sound.start_time",sound.end_time);
+        console.log("here",sounds);
         this.getSoundRaw();
     },
 
@@ -140,7 +141,7 @@ export default {
       console.log("UID =",this.UID);
       return apiService.createSound({
         title: this.title,
-        startTime: new Date().toISOString(),
+        startTime: new Date().toISOString(), //this 
         UID: this.UID,        
         }
       )
@@ -180,6 +181,9 @@ export default {
       })
         .then( items=> {
           const { title, startTime, endTime} = items;
+          // this.title = title;  //hosi
+          // this.startTime = startTime;
+          // this.endTime = endTime;
         });
     },
 
@@ -199,9 +203,14 @@ export default {
         }
         else {
           console.log("1回目 stop")
-          await this.stoprecording();
-          await this.submitRecording();
-          await this.getSoundRaw();
+          await this.stoprecording();  //1 録音ストップ
+          await this.sleep();
+          await this.submitRecording(); //2　スタートとエンドの時間もBDへ入れる
+          await this.sleep();
+          await this.getSound();  //3　入れた後に、DBからとってきて　画面表示
+          await this.sleep();
+          await this.getSoundRaw(); // 4　なま音表示
+
         };
     },
 
@@ -257,7 +266,7 @@ export default {
               this.dataUrl = ""
             }
           });
-          this.getSoundInfo();
+          //this.getSoundInfo();
       });
     },
 
@@ -270,13 +279,22 @@ export default {
       this.endTime = endTime.toISOString()
     },
 
-    submitRecording: function(evt) {
-      this.createSoundRaw();
-      this.putSoundInfo();
+  
+    sleep: function(){
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          console.log("test");
+          resolve();
+        }, 2000);
+      });
     },
+    
+    submitRecording: function() {
+      return Promise.all([this.createSoundRaw(), this.putSoundInfo()]);
+    },      
 
     createSoundRaw: function(evt) {
-      apiService.createSoundRaw({
+      return apiService.createSoundRaw({
         title: this.title,
         blob : this.blob,
         startTime: this.startTime,
@@ -286,9 +304,6 @@ export default {
         .then(newsoundid => {
           //this.items.push(newitem);
           console.log(newsoundid)
-        })
-        .catch(e => {
-          console.log('error saving account. e = ', e);
         });
     },
     
@@ -301,9 +316,6 @@ export default {
       )
         .then(newsoundid => {
           return newsoundid ;
-        })
-        .catch(e => {
-          console.log('error saving account. e = ', e);
         });
     },
 
