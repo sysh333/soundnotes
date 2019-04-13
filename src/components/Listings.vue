@@ -130,7 +130,7 @@ export default {
     getNote: function() {
       apiService.getNote({
         soundID: this.soundID,
-        UID: this.UID,   
+        UID: this.UID,
         })
         .then(items => {
           this.items = items;
@@ -141,7 +141,8 @@ export default {
       console.log("UID =",this.UID);
       return apiService.createSound({
         title: this.title,
-        startTime: new Date().toISOString(), //this 
+        startTime: this.$moment.utc(new Date()).format("YYYY-MM-DD HH:mm:ss"),
+        //startTime: new Date().toISOString(), 
         UID: this.UID,        
         }
       )
@@ -271,12 +272,16 @@ export default {
     },
 
     setStartTime: function(){
-      const startTime =  new Date()
-      this.startTime = startTime.toISOString()
+      // const startTime =  new Date()
+      // this.startTime = startTime.toISOString()
+      const startTime = this.$moment.utc(new Date()).format("YYYY-MM-DD HH:mm:ss")
+      this.startTime = startTime
     },
     setEndTime: function(){
-      const endTime =  new Date()
-      this.endTime = endTime.toISOString()
+      // const endTime =  new Date()
+      // this.endTime = endTime.toISOString()
+      const endTime = this.$moment.utc(new Date()).format("YYYY-MM-DD HH:mm:ss")
+      this.endTime = endTime
     },
 
   
@@ -346,7 +351,9 @@ export default {
       //console.log(this.text , new Date(), this.sound_id);
       apiService.createNote({
         text: this.text,
-        submit_time: new Date().toISOString()},
+        submit_time: this.$moment.utc(new Date()).format("YYYY-MM-DD HH:mm:ss")
+        //submit_time: new Date().toISOString()
+        },
         this.soundID
       )
         .then(newitem => {

@@ -7,12 +7,14 @@ import 'vue-material/dist/vue-material.min.css';
 import 'vue-material/dist/theme/default.css';
 import firebase from 'firebase/app';
 import 'firebase/auth';
+import Moment from 'vue-moment';
 
 
 import App from './App';
 import router from './router';
 
 Vue.use(VueMaterial);
+Vue.use(Moment);
 
 
 Vue.config.productionTip = false;
